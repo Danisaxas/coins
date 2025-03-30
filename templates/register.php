@@ -1,12 +1,6 @@
 <?php
 // templates/register.php
-// Asegúrate de que la ruta al archivo de la base de datos sea correcta
-$db_file_path = __DIR__ . '/../db/system_user.php';
-if (file_exists($db_file_path)) {
-    require_once $db_file_path;
-} else {
-    die("Error: No se pudo encontrar el archivo de la base de datos en: " . $db_file_path);
-}
+require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -46,6 +40,17 @@ if (file_exists($db_file_path)) {
                 $resultado_registro = registrarUsuario($pdo, $username, $correo, $contrasena);
                 if ($resultado_registro === true) {
                     echo "<p class='text-green-500 text-sm mt-2'>Registro exitoso. Ahora puedes iniciar sesión.</p>";
+                    // Iniciar sesión automáticamente después del registro
+                    $user = iniciarSesion($pdo, $username, $contrasena);
+                    if ($user) {
+                        session_start();
+                        $_SESSION['usuario_id'] = $user['id'];
+                        $_SESSION['username'] = $user['username'];
+                        $_SESSION['monedas'] = $user['monedas'];
+                        $_SESSION['ban'] = $user['ban'];
+                        header("Location: index.php?page=monedas");
+                        exit();
+                    }
                     header("Location: index.php?page=login"); // Redirige a la página de inicio de sesión
                     exit();
                 } else {
