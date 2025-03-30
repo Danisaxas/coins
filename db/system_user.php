@@ -28,7 +28,7 @@ function crearTablaUsuarios($pdo) {
             ban TINYINT(1) DEFAULT 0
         )";
         $pdo->exec($sql);
-        echo "Tabla 'users' creada o ya existente.<br>";
+        // No imprimir directamente aquí.  La creación de la tabla no es parte de la respuesta HTTP principal.
     } catch (PDOException $e) {
         die("Error al crear la tabla 'users': " . $e->getMessage());
     }
