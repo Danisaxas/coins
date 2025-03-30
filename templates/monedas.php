@@ -70,29 +70,7 @@ if ($_SESSION['ban'] == 1){
                 mensaje.style.color = "green";
                 codigoCanjeado = true;
                 // Actualizar las monedas en la sesión (esto es importante)
-                // Usar fetch para enviar la actualización al servidor
-                fetch('actualizar_monedas.php', {  // Crear un nuevo archivo para manejar esto
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `monedas=${monedas}`,
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error al actualizar las monedas');
-                    }
-                    return response.text(); // O response.json() si el servidor devuelve JSON
-                })
-                .then(data => {
-                    console.log(data); // Puedes hacer algo con la respuesta del servidor
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    mensaje.textContent = "Error al actualizar las monedas. Por favor, intenta de nuevo.";
-                    mensaje.style.color = "red";
-                });
-
+                <?php $_SESSION['monedas'] ?> = monedas;
                  // Deshabilitar el botón después de canjear
                 canjearButton.disabled = true;
                 codigoInput.disabled = true;
