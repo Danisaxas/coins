@@ -19,7 +19,7 @@
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Inicio de Sesión</h2>
         <?php
-        session_start(); // Asegurar que la sesión está iniciada
+        //  Eliminar session_start() de aquí
         if (isset($_SESSION['login_error'])) {
             echo "<p class='text-red-500 text-sm mt-2'>".$_SESSION['login_error']."</p>";
             unset($_SESSION['login_error']); // Limpia el error después de mostrarlo
@@ -43,7 +43,7 @@
 </body>
 </html>
 <?php
-    require_once(__DIR__ . '/../db/system_user.php');
+    require_once('../db/system_user.php');
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST['username'];
         $contrasena = $_POST['contrasena'];
