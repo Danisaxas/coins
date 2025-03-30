@@ -1,11 +1,14 @@
 <?php
 // index.php
-// Asegúrate de que session_start() esté al principio del archivo, antes de cualquier salida
+// Asegúrate de que session_start() esté al principio del archivo, antes de cualquier otra salida
 session_start();
 require_once 'db/system_user.php'; // Incluye el archivo de la base de datos
 
 // Define un array con las rutas permitidas
-$rutasPermitidas = ['register', 'login', 'home', 'logout', 'monedas', 'admin_codes']; // Agrega 'admin_codes'
+$rutasPermitidas = ['register', 'login', 'home', 'logout', 'admin_codes']; // Agrega 'admin_codes'
+
+// Inicializa el búfer de salida
+ob_start();
 
 // Obtiene la ruta desde la URL
 $page = isset($_GET['page']) ? $_GET['page'] : 'home'; // Página por defecto es 'home'
@@ -15,8 +18,7 @@ if (!in_array($page, $rutasPermitidas)) {
     $page = 'login'; // Si no es válida, redirige a 'login'
 }
 
-// Output buffering
-ob_start();
+
 
 // Incluye el template correspondiente
 if ($page === 'register') {
@@ -47,5 +49,6 @@ if ($page === 'register') {
         echo "Página no encontrada";
 }
 
+// Envía el búfer de salida
 ob_end_flush();
 ?>
