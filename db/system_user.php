@@ -16,48 +16,6 @@ try {
     die("Error de conexión a la base de datos: " . $e->getMessage());
 }
 
-// Función para crear la tabla de usuarios si no existe
-function crearTablaUsuarios($pdo) {
-    try {
-        $sql = "CREATE TABLE IF NOT EXISTS users (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            username VARCHAR(255) UNIQUE NOT NULL,
-            correo VARCHAR(255) UNIQUE NOT NULL,
-            contrasena VARCHAR(255) NOT NULL,
-            monedas INT DEFAULT 0,
-            ban TINYINT(1) DEFAULT 0
-        )";
-        $pdo->exec($sql);
-        echo "Tabla 'users' creada o ya existente.<br>";
-    } catch (PDOException $e) {
-        die("Error al crear la tabla 'users': " . $e->getMessage());
-    }
-}
-
-// Llamar a la función para crear la tabla
-crearTablaUsuarios($pdo);
-
-// Función para crear la tabla de códigos si no existe
-function crearTablaCodigos($pdo) {
-    try {
-        $sql = "CREATE TABLE IF NOT EXISTS codes (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            codigo VARCHAR(255) UNIQUE NOT NULL,
-            recompensa INT NOT NULL,
-            usuario VARCHAR(255) DEFAULT NULL,
-            usado TINYINT(1) DEFAULT 0,
-            creada_por VARCHAR(255) NOT NULL
-        )";
-        $pdo->exec($sql);
-        echo "Tabla 'codes' creada o ya existente.<br>";
-    } catch (PDOException $e) {
-        die("Error al crear la tabla 'codes': " . $e->getMessage());
-    }
-}
-
-// Llamar a la función para crear la tabla de códigos
-crearTablaCodigos($pdo);
-
 // Función para registrar un nuevo usuario
 function registrarUsuario($pdo, $username, $correo, $contrasena) {
     try {
