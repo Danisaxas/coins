@@ -24,18 +24,28 @@ if ($_SESSION['ban'] == 1){
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen bg-black">
+<body class="bg-gray-100 flex  min-h-screen bg-black">
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <div class="flex justify-between items-start mb-4">
+             <?php if (isset($_SESSION['usuario_id']) && $_SESSION['username'] === 'AstroOwn'): ?>
+            <a href="index.php?page=admin_codes" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline  text-center">
+                OWNER
+            </a>
+            <?php endif; ?>           
+        </div>
         <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Sistema de Monedas</h2>
         <p class="text-gray-700 text-center mb-4">Bienvenido, <?php echo $_SESSION['username']; ?>!</p>
         <p class="text-gray-700 text-center mb-6">Tienes <strong><?php echo $_SESSION['monedas']; ?></strong> monedas.</p>
-        <?php if (isset($_SESSION['usuario_id']) && $_SESSION['username'] === 'AstroOwn'): ?>
-        <div class="mt-4">
-            <a href="index.php?page=admin_codes" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full text-center">
-                OWNER
-            </a>
+
+        <div class="mb-4">
+            <label for="codigo" class="block text-gray-700 text-sm font-bold mb-2">Código:</label>
+            <input type="text" id="codigo" name="codigo" placeholder="Ingresa tu código" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
         </div>
-        <?php endif; ?>
+
+        <button id="canjear" class="bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Canjear</button>
+
+        <div id="mensaje" class="mt-4 text-gray-600 text-center"></div>
+
         <a href="index.php?page=logout" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-4">Cerrar Sesión</a>
     </div>
 
@@ -44,6 +54,7 @@ if ($_SESSION['ban'] == 1){
         const codigoInput = document.getElementById("codigo");
         const canjearButton = document.getElementById("canjear");
         const mensaje = document.getElementById("mensaje");
+
 
         let monedas = <?php echo $_SESSION['monedas']; ?>; // Inicializa con las monedas de la sesión
         let codigoCanjeado = false; // Variable para rastrear si el código ya se canjeó
@@ -74,6 +85,7 @@ if ($_SESSION['ban'] == 1){
             }
             codigoInput.value = "";
         });
+
     </script>
 </body>
 </html>
