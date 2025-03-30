@@ -1,6 +1,6 @@
 <?php
 // templates/register.php
-require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
+require_once(__DIR__ . '/../db/system_user.php'); // Corrige la ruta al archivo
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -48,7 +48,7 @@ require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
                         $_SESSION['username'] = $user['username'];
                         $_SESSION['monedas'] = $user['monedas'];
                         $_SESSION['ban'] = $user['ban'];
-                        header("Location: index.php?page=monedas");
+                        header("Location: /home");
                         exit();
                     }
 
@@ -58,7 +58,7 @@ require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
             }
         }
         ?>
-        <form method="post" action="index.php?page=register">
+        <form method="post" action="/register">
             <div class="mb-4">
                 <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Nombre de Usuario:</label>
                 <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
@@ -78,7 +78,7 @@ require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
             <button type="submit" class="bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Registrarse</button>
         </form>
         <div class="mt-4 text-center">
-            <p class="text-gray-600 text-sm">¿Ya tienes una cuenta? <a href="index.php?page=login" class="text-blue-500 hover:text-blue-700 font-semibold">Inicia sesión</a></p>
+            <p class="text-gray-600 text-sm">¿Ya tienes una cuenta? <a href="/login" class="text-blue-500 hover:text-blue-700 font-semibold">Inicia sesión</a></p>
         </div>
     </div>
 </body>

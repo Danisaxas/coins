@@ -2,32 +2,38 @@
 // index.php
 // Asegúrate de que session_start() esté al principio del archivo, antes de cualquier salida
 session_start();
-// Incluye el archivo de la base de datos
-$db_file_path = __DIR__ . '/db/system_user.php'; // Define la ruta absoluta al archivo
-if (file_exists($db_file_path)) {
-    require_once $db_file_path;
-} else {
-    die("Error: No se pudo encontrar el archivo de la base de datos en: " . $db_file_path);
+require_once 'db/system_user.php';
+
+// Define un array con las rutas permitidas
+$rutasPermitidas = ['register', 'login', 'home', 'logout'];
+
+// Obtiene la ruta desde la URL
+$ruta = isset($_GET['page']) ? $_GET['page'] : 'home'; // La página principal será 'home'
+
+// Verifica si la ruta está permitida
+if (!in_array($ruta, $rutasPermitidas)) {
+    $ruta = 'home'; // Si no es válida, usa 'home' como fallback
 }
 
-// Determina qué página cargar
-$page = isset($_GET['page']) ? $_GET['page'] : 'register'; // Por defecto a la página de registro
-
-// Output buffering is used to prevent el error "headers already sent".
+// Output buffering
 ob_start();
 
-if ($page === 'register') {
+// Incluye el template correspondiente
+if ($ruta === 'register') {
     include 'templates/register.php';
-} elseif ($page === 'login') {
+} elseif ($ruta === 'login') {
     include 'templates/login.php';
-} elseif ($page === 'monedas') {
+} elseif ($ruta === 'home') {
     // Verificar si el usuario ha iniciado sesión antes de mostrar la página de monedas
-    include 'templates/monedas.php';
-} elseif ($page === 'logout') {
+    if (isset($_SESSION['usuario_id'])) {
+        include 'templates/monedas.php';
+    } else {
+        // Redirige al usuario al login si no está logueado
+        header("Location: /login"); // Redirige a /login
+        exit();
+    }
+} elseif ($ruta === 'logout') {
     include 'templates/logout.php';
-} else {
-    // Manejar página no encontrada
-    echo "Página no encontrada"; // Puedes crear una página 404 personalizada
 }
 
 ob_end_flush();
