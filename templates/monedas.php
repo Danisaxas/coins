@@ -24,11 +24,11 @@ if ($_SESSION['ban'] == 1){
         }
     </style>
 </head>
-<body class="bg-gray-900  min-h-screen ">
+<body class="bg-black  min-h-screen ">
     <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-start mb-4">
              <?php if (isset($_SESSION['usuario_id']) && $_SESSION['username'] === 'AstroOwn'): ?>
-            <a href="index.php?page=admin_codes" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline  text-left">
+            <a href="index.php?page=admin_codes" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-left">
                 OWNER
             </a>
             <?php endif; ?>           
@@ -70,7 +70,29 @@ if ($_SESSION['ban'] == 1){
                 mensaje.style.color = "green";
                 codigoCanjeado = true;
                 // Actualizar las monedas en la sesión (esto es importante)
-                <?php $_SESSION['monedas'] ?> = monedas;
+                // Usar fetch para enviar la actualización al servidor
+                fetch('actualizar_monedas.php', {  // Crear un nuevo archivo para manejar esto
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `monedas=${monedas}`,
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al actualizar las monedas');
+                    }
+                    return response.text(); // O response.json() si el servidor devuelve JSON
+                })
+                .then(data => {
+                    console.log(data); // Puedes hacer algo con la respuesta del servidor
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    mensaje.textContent = "Error al actualizar las monedas. Por favor, intenta de nuevo.";
+                    mensaje.style.color = "red";
+                });
+
                  // Deshabilitar el botón después de canjear
                 canjearButton.disabled = true;
                 codigoInput.disabled = true;
