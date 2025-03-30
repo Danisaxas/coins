@@ -43,7 +43,7 @@
 </body>
 </html>
 <?php
-    require_once('../db/system_user.php');
+    require_once(__DIR__ . '/../db/system_user.php');
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST['username'];
         $contrasena = $_POST['contrasena'];
