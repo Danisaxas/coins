@@ -51,8 +51,7 @@ require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
                         header("Location: index.php?page=monedas");
                         exit();
                     }
-                    header("Location: index.php?page=login"); // Redirige a la página de inicio de sesión
-                    exit();
+
                 } else {
                     echo "<p class='text-red-500 text-sm mt-2'>$resultado_registro</p>"; // Muestra el mensaje de error devuelto por la función
                 }
