@@ -19,7 +19,7 @@
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Inicio de Sesión</h2>
         <?php
-        session_start(); // Asegurar que la sesión está iniciada
+        // No se inicia la sesión aquí, se inicia en index.php
         if (isset($_SESSION['login_error'])) {
             echo "<p class='text-red-500 text-sm mt-2'>".$_SESSION['login_error']."</p>";
             unset($_SESSION['login_error']); // Limpia el error después de mostrarlo
@@ -43,17 +43,22 @@
 </body>
 </html>
 <?php
-    require_once('../db/system_user.php');
+    // Incluir el archivo de la base de datos
+    require_once(__DIR__ . '/../db/system_user.php');
+
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST['username'];
         $contrasena = $_POST['contrasena'];
+
         $resultado_inicio_sesion = iniciarSesion($pdo, $username, $contrasena);
+
         if ($resultado_inicio_sesion) {
             // Iniciar sesión exitosa, guardar datos del usuario en sesión
             $_SESSION['usuario_id'] = $resultado_inicio_sesion['id'];
             $_SESSION['username'] = $resultado_inicio_sesion['username'];
             $_SESSION['monedas'] = $resultado_inicio_sesion['monedas'];
             $_SESSION['ban'] = $resultado_inicio_sesion['ban'];
+
             header("Location: index.php?page=monedas");
             exit();
         } else {
