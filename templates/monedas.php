@@ -32,6 +32,7 @@ if ($_SESSION['ban'] == 1){
                 OWNER
             </a>
             <?php endif; ?>           
+             <a href="index.php?page=logout" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline  text-center">Cerrar Sesión</a>
         </div>
         <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Sistema de Monedas</h2>
         <p class="text-gray-700 text-center mb-4">Bienvenido, <?php echo $_SESSION['username']; ?>!</p>
@@ -46,7 +47,7 @@ if ($_SESSION['ban'] == 1){
 
         <div id="mensaje" class="mt-4 text-gray-600 text-center"></div>
 
-        <a href="index.php?page=logout" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-4">Cerrar Sesión</a>
+       
     </div>
 
     <script>
