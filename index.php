@@ -7,18 +7,11 @@ require_once 'db/system_user.php'; // Incluye el archivo de la base de datos
 // Define un array con las rutas permitidas
 $rutasPermitidas = ['register', 'login', 'home', 'logout', 'admin_codes']; // Agrega 'admin_codes'
 
-// Inicializa el búfer de salida
-ob_start();
-
 // Obtiene la ruta desde la URL
-$page = isset($_GET['page']) ? $_GET['page'] : 'home'; // Página por defecto es 'home'
+$page = isset($_GET['page']) ? $_GET['page'] : 'home'; // Página por defecto a la página principal
 
-// Verifica si la ruta está permitida
-if (!in_array($page, $rutasPermitidas)) {
-    $page = 'login'; // Si no es válida, redirige a 'login'
-}
-
-
+// Output buffering
+ob_start();
 
 // Incluye el template correspondiente
 if ($page === 'register') {
@@ -31,7 +24,7 @@ if ($page === 'register') {
         include 'templates/monedas.php';
     } else {
         // Redirige al usuario al login si no está logueado
-        header("Location: index.php?page=login"); // Redirige a index.php?page=login
+        header("Location: index.php?page=login");
         exit();
     }
 } elseif ($page === 'logout') {
@@ -46,9 +39,9 @@ if ($page === 'register') {
         exit();
     }
 } else {
-        echo "Página no encontrada";
+    // Manejar página no encontrada
+    echo "Página no encontrada"; // Puedes crear una página 404 personalizada
 }
 
-// Envía el búfer de salida
 ob_end_flush();
 ?>

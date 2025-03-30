@@ -1,35 +1,22 @@
 <?php
-// db/system_user_queries.php
-
-function iniciarSesion($pdo, $username, $contrasena) {
+function crearTablaCodigos($pdo) {
     try {
-        $sql = "SELECT * FROM users WHERE username = :username";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':username', $username);
-        $stmt->execute();
-        $user = $stmt->fetch();
-
-        if ($user && $user['contrasena'] === $contrasena) {
-            return $user;
-        } else {
-            return false;
-        }
+        $sql = "CREATE TABLE IF NOT EXISTS codes (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            codigo VARCHAR(255) UNIQUE NOT NULL,
+            recompensa INT NOT NULL,
+            usuario VARCHAR(255) DEFAULT NULL,
+            usado TINYINT(1) DEFAULT 0,
+            creada_por VARCHAR(255) NOT NULL
+        )";
+        $pdo->exec($sql);
+        echo "Tabla 'codes' creada o ya existente.<br>";
     } catch (PDOException $e) {
-        die("Error al iniciar sesión: " . $e->getMessage());
+        die("Error al crear la tabla 'codes': " . $e->getMessage());
     }
 }
 
-function obtenerUsuarioPorUsername($pdo, $username) {
-    try {
-        $sql = "SELECT * FROM users WHERE username = :username";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':username', $username);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC); // Devuelve un array asociativo
-    } catch (PDOException $e) {
-        die("Error al obtener usuario: " . $e->getMessage());
-    }
-}
+
 
 function crearCodigo($pdo, $codigo, $recompensa, $creada_por) {
     try {
@@ -42,6 +29,18 @@ function crearCodigo($pdo, $codigo, $recompensa, $creada_por) {
         return true;
     } catch (PDOException $e) {
         return "Error al crear código: " . $e->getMessage();
+    }
+}
+
+function obtenerUsuarioPorUsername($pdo, $username) {
+    try {
+        $sql = "SELECT * FROM users WHERE username = :username";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC); // Devuelve un array asociativo
+    } catch (PDOException $e) {
+        die("Error al obtener usuario: " . $e->getMessage());
     }
 }
 ?>
