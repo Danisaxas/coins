@@ -4,30 +4,30 @@
 session_start();
 require_once 'db/system_user.php'; // Incluye el archivo de la base de datos
 
-// Determina qué página cargar
-$page = isset($_GET['page']) ? $_GET['page'] : 'register'; // Por defecto a la página de registro
+// Define un array con las rutas permitidas
+$rutasPermitidas = ['register', 'login', 'home', 'logout'];
 
-// Output buffering is used to prevent el error "headers already sent".
-ob_start();
+// Obtiene la ruta desde la URL
+$ruta = isset($_GET['page']) ? $_GET['page'] : '';
 
-if ($page === 'register') {
-    include 'templates/register.php';
-} elseif ($page === 'login') {
-    include 'templates/login.php';
-} elseif ($page === 'monedas') {
-    // Verificar si el usuario ha iniciado sesión antes de mostrar la página de monedas
-    if (isset($_SESSION['usuario_id'])) {
-        include 'templates/monedas.php';
+// Determina a qué página ir
+if (isset($_SESSION['usuario_id'])) {
+    // Si el usuario tiene una sesión iniciada
+    if ($ruta === 'logout') {
+        include 'templates/logout.php';
     } else {
-        // Redirigir al usuario a la página de inicio de sesión si no ha iniciado sesión
-        header("Location: index.php?page=login");
+        // Redirige al usuario a la página de inicio (monedas)
+        header("Location: index.php?page=monedas");
         exit();
     }
-} elseif ($page === 'logout') {
-    include 'templates/logout.php';
 } else {
-    // Manejar página no encontrada
-    echo "Página no encontrada"; // Puedes crear una página 404 personalizada
+    // Si el usuario no tiene una sesión iniciada
+    if ($ruta === 'register') {
+        include 'templates/register.php';
+    } else {
+        // Muestra la página de inicio de sesión
+        include 'templates/login.php';
+    }
 }
 
 ob_end_flush();
