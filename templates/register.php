@@ -1,10 +1,7 @@
-**templates/register.php:**
-
-```php
 <?php
 // templates/register.php
 // Asegúrate de que la ruta al archivo de la base de datos sea correcta
-$db_file_path = '../db/system_user.php';
+$db_file_path = __DIR__ . '/../db/system_user.php';
 if (file_exists($db_file_path)) {
     require_once $db_file_path;
 } else {
@@ -82,4 +79,3 @@ if (file_exists($db_file_path)) {
     </div>
 </body>
 </html>
-```
