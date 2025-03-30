@@ -20,7 +20,7 @@ if ($page === 'register') {
         include 'templates/monedas.php';
     } else {
         // Redirigir al usuario a la página de inicio de sesión si no ha iniciado sesión
-        header("Location: login.php");
+        header("Location: index.php?page=login");
         exit();
     }
 } elseif ($page === 'logout') {
