@@ -43,8 +43,8 @@ ob_start(); // Asegurarse de que no haya salida antes de los encabezados
 </body>
 </html>
 <?php
-    require_once('../db/system_user.php');
-    require_once('../db/system_user_queries.php'); // Incluir el nuevo archivo con las funciones de consulta
+    require_once(__DIR__ . '/../db/system_user.php');
+    require_once(__DIR__ . '/../db/system_user_queries.php'); // Incluir el nuevo archivo con las funciones de consulta
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST['username'];
