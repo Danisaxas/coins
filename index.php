@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -41,7 +44,7 @@
         </form>
         <div id="mensaje" class="mt-4 text-gray-600 text-center">
             <?php
-            session_start();
+
             if (isset($_POST['codigo'])) {
                 $codigo = strtoupper($_POST['codigo']);
                 if ($codigo === "UNITY" && !isset($_SESSION['codigo_canjeado'])) {
