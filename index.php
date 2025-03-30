@@ -5,29 +5,34 @@ session_start();
 require_once 'db/system_user.php'; // Incluye el archivo de la base de datos
 
 // Define un array con las rutas permitidas
-$rutasPermitidas = ['register', 'login', 'home', 'logout'];
+$rutasPermitidas = ['register', 'login', 'home', 'logout', 'monedas']; // Agregamos 'monedas' a las rutas permitidas
 
 // Obtiene la ruta desde la URL
-$ruta = isset($_GET['page']) ? $_GET['page'] : 'home'; // La página principal será 'home'
+$page = isset($_GET['page']) ? $_GET['page'] : 'home'; // Página por defecto es 'home'
+
+// Verifica si la ruta está permitida
+if (!in_array($page, $rutasPermitidas)) {
+    $page = 'login'; // Si la ruta no es válida, redirige a 'login'
+}
 
 // Output buffering
 ob_start();
 
 // Incluye el template correspondiente
-if ($ruta === 'register') {
+if ($page === 'register') {
     include 'templates/register.php';
-} elseif ($ruta === 'login') {
+} elseif ($page === 'login') {
     include 'templates/login.php';
-} elseif ($ruta === 'home') {
+} elseif ($page === 'monedas') {
     // Verificar si el usuario ha iniciado sesión antes de mostrar la página de monedas
     if (isset($_SESSION['usuario_id'])) {
         include 'templates/monedas.php';
     } else {
         // Redirige al usuario al login si no está logueado
-        header("Location: index.php?page=login"); // Redirige a /login
+        header("Location: index.php?page=login"); // Redirige a index.php?page=login
         exit();
     }
-} elseif ($ruta === 'logout') {
+} elseif ($page === 'logout') {
     include 'templates/logout.php';
 } else {
     // Manejar página no encontrada
