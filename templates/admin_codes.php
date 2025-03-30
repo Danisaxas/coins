@@ -5,7 +5,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['username'] !== 'AstroOwn') {
     exit();
 }
 
-require_once('../db/system_user.php');
+require_once(__DIR__ . '/../db/system_user.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $codigo = $_POST['codigo'];
@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Administración de Códigos</h1>
 
-        <form method="post" action="">
+        <form method="post" action="index.php?page=admin_codes">
             <div class="mb-4">
                 <label for="codigo" class="block text-gray-700 text-sm font-bold mb-2">Código:</label>
                 <input type="text" id="codigo" name="codigo" placeholder="Ingrese el código" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
