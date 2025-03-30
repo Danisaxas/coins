@@ -22,13 +22,7 @@ if ($page === 'register') {
     include 'templates/login.php';
 } elseif ($page === 'monedas') {
     // Verificar si el usuario ha iniciado sesión antes de mostrar la página de monedas
-    if (isset($_SESSION['usuario_id'])) {
-        include 'templates/monedas.php';
-    } else {
-        // Redirigir al usuario a la página de inicio de sesión si no ha iniciado sesión
-        header("Location: index.php?page=login");
-        exit();
-    }
+    include 'templates/monedas.php';
 } elseif ($page === 'logout') {
     include 'templates/logout.php';
 } else {
