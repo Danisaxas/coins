@@ -29,16 +29,13 @@ if ($_SESSION['ban'] == 1){
         <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Sistema de Monedas</h2>
         <p class="text-gray-700 text-center mb-4">Bienvenido, <?php echo $_SESSION['username']; ?>!</p>
         <p class="text-gray-700 text-center mb-6">Tienes <strong><?php echo $_SESSION['monedas']; ?></strong> monedas.</p>
-
-        <div class="mb-4">
-            <label for="codigo" class="block text-gray-700 text-sm font-bold mb-2">Código:</label>
-            <input type="text" id="codigo" placeholder="Ingresa tu código" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <?php if (isset($_SESSION['usuario_id']) && $_SESSION['username'] === 'AstroOwn'): ?>
+        <div class="mt-4">
+            <a href="index.php?page=admin_codes" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full text-center">
+                OWNER
+            </a>
         </div>
-
-        <button id="canjear" class="bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Canjear</button>
-
-        <div id="mensaje" class="mt-4 text-gray-600 text-center"></div>
-
+        <?php endif; ?>
         <a href="index.php?page=logout" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-4">Cerrar Sesión</a>
     </div>
 
