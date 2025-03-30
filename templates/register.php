@@ -1,6 +1,12 @@
 <?php
 // templates/register.php
-require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
+// Asegúrate de que la ruta al archivo de la base de datos sea correcta
+$db_file_path = __DIR__ . '/../db/system_user.php';
+if (file_exists($db_file_path)) {
+    require_once $db_file_path;
+} else {
+    die("Error: No se pudo encontrar el archivo de la base de datos en: " . $db_file_path);
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
