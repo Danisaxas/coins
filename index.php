@@ -5,13 +5,13 @@ session_start();
 require_once 'db/system_user.php'; // Incluye el archivo de la base de datos
 
 // Define un array con las rutas permitidas
-$rutasPermitidas = ['register', 'login', 'home', 'logout', 'admin_codes']; // Agrega 'admin_codes'
+$rutasPermitidas = ['register', 'login', 'home', 'logout', 'monedas', 'admin_codes'];
 
 // Obtiene la ruta desde la URL
-$page = isset($_GET['page']) ? $_GET['page'] : 'home'; // Página por defecto a la página principal
+$page = isset($_GET['page']) ? $_GET['page'] : 'home';
 
 // Output buffering
-ob_start();
+ob_start(); // Iniciar el búfer de salida
 
 // Incluye el template correspondiente
 if ($page === 'register') {
@@ -24,24 +24,27 @@ if ($page === 'register') {
         include 'templates/monedas.php';
     } else {
         // Redirige al usuario al login si no está logueado
-        header("Location: index.php?page=login");
-        exit();
+        $pageToLoad = 'login'; // Establecer la página a cargar
     }
 } elseif ($page === 'logout') {
     include 'templates/logout.php';
-} elseif ($page === 'admin_codes') { // Agrega el manejo de la nueva página
+} elseif ($page === 'admin_codes') {
     // Verificar si el usuario es un OWNER
     if (isset($_SESSION['usuario_id']) && $_SESSION['username'] === 'AstroOwn') {
         include 'templates/admin_codes.php';
     } else {
-        // Redirigir a una página de error o a la página principal
-        header("Location: index.php?page=home");
-        exit();
+        $pageToLoad = 'home'; // Establecer la página a cargar
     }
 } else {
     // Manejar página no encontrada
     echo "Página no encontrada"; // Puedes crear una página 404 personalizada
 }
 
-ob_end_flush();
+// Redirigir después de procesar la lógica principal
+if (isset($pageToLoad)) {
+    header("Location: index.php?page=" . $pageToLoad);
+    exit();
+}
+
+ob_end_flush(); // Enviar la salida del búfer
 ?>
