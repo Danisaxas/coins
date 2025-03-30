@@ -19,12 +19,13 @@
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Inicio de Sesión</h2>
         <?php
+        session_start(); // Asegurar que la sesión está iniciada
         if (isset($_SESSION['login_error'])) {
             echo "<p class='text-red-500 text-sm mt-2'>".$_SESSION['login_error']."</p>";
             unset($_SESSION['login_error']); // Limpia el error después de mostrarlo
         }
         ?>
-        <form method="post" action="index.php?page=login">
+        <form method="post" action="">
             <div class="mb-4">
                 <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Nombre de Usuario:</label>
                 <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
@@ -41,3 +42,24 @@
     </div>
 </body>
 </html>
+<?php
+    require_once('../db/system_user.php');
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $username = $_POST['username'];
+        $contrasena = $_POST['contrasena'];
+        $resultado_inicio_sesion = iniciarSesion($pdo, $username, $contrasena);
+        if ($resultado_inicio_sesion) {
+            // Iniciar sesión exitosa, guardar datos del usuario en sesión
+            $_SESSION['usuario_id'] = $resultado_inicio_sesion['id'];
+            $_SESSION['username'] = $resultado_inicio_sesion['username'];
+            $_SESSION['monedas'] = $resultado_inicio_sesion['monedas'];
+            $_SESSION['ban'] = $resultado_inicio_sesion['ban'];
+            header("Location: index.php?page=monedas");
+            exit();
+        } else {
+            $_SESSION['login_error'] = "Credenciales inválidas. Por favor, intenta de nuevo.";
+            header("Location: index.php?page=login");
+            exit();
+        }
+    }
+?>
