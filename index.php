@@ -34,6 +34,9 @@ if ($ruta === 'register') {
     }
 } elseif ($ruta === 'logout') {
     include 'templates/logout.php';
+} else {
+    // Manejar página no encontrada
+    echo "Página no encontrada"; // Puedes crear una página 404 personalizada
 }
 
 ob_end_flush();
