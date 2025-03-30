@@ -24,16 +24,17 @@ if ($_SESSION['ban'] == 1){
         }
     </style>
 </head>
-<body class="bg-gray-900 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+<body class="bg-gray-900  min-h-screen ">
+    <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-start mb-4">
              <?php if (isset($_SESSION['usuario_id']) && $_SESSION['username'] === 'AstroOwn'): ?>
-            <a href="index.php?page=admin_codes" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-left">
+            <a href="index.php?page=admin_codes" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline  text-left">
                 OWNER
             </a>
             <?php endif; ?>           
              <a href="index.php?page=logout" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-right">Cerrar Sesión</a>
         </div>
+        <div class="bg-white p-8 rounded-lg shadow-md  max-w-md mx-auto">
         <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Sistema de Monedas</h2>
         <p class="text-gray-300 text-center mb-4">Bienvenido, <?php echo $_SESSION['username']; ?>!</p>
         <p class="text-gray-300 text-center mb-6">Tienes <strong><?php echo $_SESSION['monedas']; ?></strong> monedas.</p>
@@ -47,7 +48,7 @@ if ($_SESSION['ban'] == 1){
 
         <div id="mensaje" class="mt-4 text-gray-600 text-center"></div>
 
-       
+       </div>
     </div>
 
     <script>
