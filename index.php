@@ -43,6 +43,7 @@ if ($page === 'register') {
 // Redirigir después de procesar la lógica principal
 if (isset($pageToLoad)) {
     header("Location: index.php?page=" . $pageToLoad);
+    echo "<script>window.location.href = 'index.php?page=" . $pageToLoad . "';</script>"; // Agregar redirección JavaScript
     exit();
 }
 
