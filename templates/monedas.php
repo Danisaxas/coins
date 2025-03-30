@@ -1,3 +1,6 @@
+**templates/monedas.php:**
+
+```php
 <?php
 // templates/monedas.php
 session_start();
@@ -33,3 +36,4 @@ if ($_SESSION['ban'] == 1){
     </div>
 </body>
 </html>
+```

@@ -1,3 +1,6 @@
+**templates/login.php:**
+
+```php
 <?php
 // templates/login.php
 ?>
@@ -41,3 +44,4 @@
     </div>
 </body>
 </html>
+```

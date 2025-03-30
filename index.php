@@ -1,8 +1,17 @@
-php
+**index.php:**
+
+```php
 <?php
 // index.php
-session_start(); // Inicia la sesión al principio de index.php
-require_once 'db/system_user.php'; // Incluye el archivo de la base de datos
+// Asegúrate de que session_start() esté al principio del archivo, antes de cualquier salida
+session_start();
+// Incluye el archivo de la base de datos
+$db_file_path = 'db/system_user.php'; // Define la ruta del archivo
+if (file_exists($db_file_path)) {
+    require_once $db_file_path;
+} else {
+    die("Error: No se pudo encontrar el archivo de la base de datos en: " . $db_file_path);
+}
 
 // Determina qué página cargar
 $page = isset($_GET['page']) ? $_GET['page'] : 'register'; // Por defecto a la página de registro
@@ -20,3 +29,5 @@ if ($page === 'register') {
     echo "Página no encontrada"; // Puedes crear una página 404 personalizada
 }
 ?>
+
+```

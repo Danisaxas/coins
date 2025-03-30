@@ -1,3 +1,6 @@
+**db/system_user.php:**
+
+```php
 <?php
 // db/system_user.php
 
@@ -77,3 +80,4 @@ function iniciarSesion($pdo, $username, $contrasena) {
     }
 }
 ?>
+```
