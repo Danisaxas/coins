@@ -1,88 +1,287 @@
+**index.php:**
+
+```php
 <?php
-session_start();
+// index.php
+session_start(); // Inicia la sesión al principio de index.php
+require_once 'db/system_user.php'; // Incluye el archivo de la base de datos
+
+// Determina qué página cargar
+$page = isset($_GET['page']) ? $_GET['page'] : 'register'; // Por defecto a la página de registro
+
+if ($page === 'register') {
+    include 'templates/register.php';
+} elseif ($page === 'login') {
+    include 'templates/login.php';
+} elseif ($page === 'monedas') {
+    include 'templates/monedas.php';
+} elseif ($page === 'logout') {
+    include 'templates/logout.php';
+} else {
+    // Manejar página no encontrada
+    echo "Página no encontrada"; // Puedes crear una página 404 personalizada
+}
+?>
+```
+
+**db/system_user.php:**
+
+```php
+<?php
+// db/system_user.php
+
+// Conexión a la base de datos
+$host = 'gondola.proxy.rlwy.net';
+$port = 40901;
+$dbname = 'railway';
+$user = 'root';
+$pass = 'tOdANCqiEPYRhYMpuhaSjiSFkRcgYyfv';
+
+try {
+    $dsn = "mysql:host=$host;port=$port;dbname=$dbname";
+    $pdo = new PDO($dsn, $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Error de conexión a la base de datos: " . $e->getMessage());
+}
+
+// Función para crear la tabla de usuarios si no existe
+function crearTablaUsuarios($pdo) {
+    try {
+        $sql = "CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(255) UNIQUE NOT NULL,
+            correo VARCHAR(255) UNIQUE NOT NULL,
+            contrasena VARCHAR(255) NOT NULL,
+            monedas INT DEFAULT 0,
+            ban TINYINT(1) DEFAULT 0
+        )";
+        $pdo->exec($sql);
+        echo "Tabla 'users' creada o ya existente.<br>";
+    } catch (PDOException $e) {
+        die("Error al crear la tabla 'users': " . $e->getMessage());
+    }
+}
+
+// Llamar a la función para crear la tabla
+crearTablaUsuarios($pdo);
+
+// Función para registrar un nuevo usuario
+function registrarUsuario($pdo, $username, $correo, $contrasena) {
+    try {
+        $sql = "INSERT INTO users (username, correo, contrasena) VALUES (:username, :correo, :contrasena)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':correo', $correo);
+        $stmt->bindParam(':contrasena', $contrasena); // La contraseña se almacena sin encriptar
+        $stmt->execute();
+        return true;
+    } catch (PDOException $e) {
+        // Manejar el error de manera más específica
+        if ($e->getCode() == 23000) {
+            return "Error: El nombre de usuario o el correo electrónico ya están en uso.";
+        } else {
+            return "Error al registrar usuario: " . $e->getMessage();
+        }
+    }
+}
+
+// Función para iniciar sesión de usuario
+function iniciarSesion($pdo, $username, $contrasena) {
+    try {
+        $sql = "SELECT * FROM users WHERE username = :username";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+        $user = $stmt->fetch();
+
+        if ($user && $user['contrasena'] === $contrasena) {
+            return $user;
+        } else {
+            return false;
+        }
+    } catch (PDOException $e) {
+        die("Error al iniciar sesión: " . $e->getMessage());
+    }
+}
+?>
+```
+
+**templates/login.php:**
+
+```php
+<?php
+// templates/login.php
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canje de Códigos</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/canvas-confetti@1.9.0/dist/confetti.browser.js"></script>
+    <title>Inicio de Sesión</title>
+    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap)" rel="stylesheet">
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
         }
-        #confetti-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1000;
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Inicio de Sesión</h2>
+        <?php
+        if (isset($_SESSION['login_error'])) {
+            echo "<p class='text-red-500 text-sm mt-2'>".$_SESSION['login_error']."</p>";
+            unset($_SESSION['login_error']); // Limpia el error después de mostrarlo
+        }
+        ?>
+        <form method="post" action="index.php?page=login">
+            <div class="mb-4">
+                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Nombre de Usuario:</label>
+                <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-6">
+                <label for="contrasena" class="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
+                <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <button type="submit" class="bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Iniciar Sesión</button>
+        </form>
+        <div class="mt-4 text-center">
+            <p class="text-gray-600 text-sm">¿No tienes una cuenta? <a href="index.php?page=register" class="text-blue-500 hover:text-blue-700 font-semibold">Regístrate</a></p>
+        </div>
+    </div>
+</body>
+</html>
+```
+
+**templates/logout.php:**
+
+```php
+<?php
+// templates/logout.php
+session_start();
+session_destroy();
+header("Location: index.php?page=login");
+exit();
+?>
+```
+
+**templates/monedas.php:**
+
+```php
+<?php
+// templates/monedas.php
+session_start();
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: index.php?page=login"); // Redirige a la página de inicio de sesión
+    exit();
+}
+if ($_SESSION['ban'] == 1){
+    echo "Usuario Baneado";
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Monedas</title>
+    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap)" rel="stylesheet">
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
         }
     </style>
 </head>
-<body class="bg-black flex items-center justify-center min-h-screen">
-    <canvas id="confetti-canvas"></canvas>
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md relative z-10">
-        <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Canjea tu Código</h1>
-        <div class="flex items-center mb-4">
-            <img src="https://img.freepik.com/psd-gratis/simbolo-loteria-realista-aislado_23-2151177245.jpg?t=st=1743336502~exp=1743340102~hmac=d0ab6a4692f1204b707647b7e6fabb1ae407324b13af0773481ea1ccfc195857&w=740" alt="Icono de Moneda" class="mr-2 w-6 h-6">
-            <span id="monedas" class="text-gray-700 font-medium">Monedas: <?php echo isset($_SESSION['monedas']) ? $_SESSION['monedas'] : 0; ?></span>
-        </div>
-        <form method="post" action="">
-            <div class="mb-4">
-                <label for="codigo" class="block text-gray-700 text-sm font-bold mb-2">Código:</label>
-                <input type="text" id="codigo" name="codigo" placeholder="Ingresa tu código" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            <button type="submit" id="canjear" class="bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Canjear</button>
-        </form>
-        <div id="mensaje" class="mt-4 text-gray-600 text-center">
-            <?php
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Sistema de Monedas</h2>
+        <p class="text-gray-700 text-center mb-4">Bienvenido, <?php echo $_SESSION['username']; ?>!</p>
+        <p class="text-gray-700 text-center mb-6">Tienes <strong><?php echo $_SESSION['monedas']; ?></strong> monedas.</p>
+        <a href="index.php?page=logout" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Cerrar Sesión</a>
+    </div>
+</body>
+</html>
+```
 
-            if (isset($_POST['codigo'])) {
-                $codigo = strtoupper($_POST['codigo']);
-                if ($codigo === "UNITY" && !isset($_SESSION['codigo_canjeado'])) {
-                    $_SESSION['monedas'] = isset($_SESSION['monedas']) ? $_SESSION['monedas'] + 100 : 100;
-                    $_SESSION['codigo_canjeado'] = true;
-                    echo "<script>
-                        const confettiCanvas = document.getElementById('confetti-canvas');
-                        const confettiInstance = confetti.create(confettiCanvas, {
-                            resize: true,
-                            useWorker: true
-                        });
-                        confettiInstance({
-                            particleCount: 200,
-                            spread: 70,
-                            origin: { y: 0.6 },
-                            colors: ['#facc15', '#f59e0b', '#d97706'],
-                            shapes: ['circle'],
-                        });
-                    </script>";
-                    echo "¡Código canjeado con éxito! Se han añadido 100 monedas.";
-                } else if ($codigo === "UNITY" && isset($_SESSION['codigo_canjeado'])) {
-                    echo "El código ya ha sido canjeado.";
-                } else if ($codigo === "") {
-                    echo "Por favor, ingresa un código.";
-                }else {
-                    echo "Código inválido. Por favor, intenta de nuevo.";
+**templates/register.php:**
+
+```php
+<?php
+// templates/register.php
+require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap)" rel="stylesheet">
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Registro</h2>
+        <?php
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $username = $_POST['username'];
+            $correo = $_POST['correo'];
+            $contrasena = $_POST['contrasena'];
+            $confirmar_contrasena = $_POST['confirmar_contrasena'];
+
+            // Validaciones del lado del servidor
+            if (strlen($username) < 6 || strlen($username) > 16 || !preg_match('/^[a-zA-Z0-9]+$/', $username)) {
+                echo "<p class='text-red-500 text-sm mt-2'>El nombre de usuario debe tener entre 6 y 16 caracteres y contener solo letras y números.</p>";
+            } else if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+                echo "<p class='text-red-500 text-sm mt-2'>El correo electrónico no es válido.</p>";
+            } else if (strlen($contrasena) < 6 || !preg_match('/^[A-Z]/', $contrasena) || !preg_match('/\d/', $contrasena) || !preg_match('/[^a-zA-Z\d]/', $contrasena)) {
+                echo "<p class='text-red-500 text-sm mt-2'>La contraseña debe tener al menos 6 caracteres, comenzar con una letra mayúscula, contener números y signos.</p>";
+            } else if ($contrasena != $confirmar_contrasena) {
+                echo "<p class='text-red-500 text-sm mt-2'>Las contraseñas no coinciden.</p>";
+            } else {
+                // Si todas las validaciones pasan, intenta registrar al usuario
+                $resultado_registro = registrarUsuario($pdo, $username, $correo, $contrasena);
+                if ($resultado_registro === true) {
+                    echo "<p class='text-green-500 text-sm mt-2'>Registro exitoso. Ahora puedes iniciar sesión.</p>";
+                    header("Location: index.php?page=login"); // Redirige a la página de inicio de sesión
+                    exit();
+                } else {
+                    echo "<p class='text-red-500 text-sm mt-2'>$resultado_registro</p>"; // Muestra el mensaje de error devuelto por la función
                 }
-                echo "<br>";
             }
-            ?>
+        }
+        ?>
+        <form method="post" action="index.php?page=register">
+            <div class="mb-4">
+                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Nombre de Usuario:</label>
+                <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-4">
+                <label for="correo" class="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico:</label>
+                <input type="email" id="correo" name="correo" placeholder="Ingrese su correo electrónico" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-4">
+                <label for="contrasena" class="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
+                <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-6">
+                <label for="confirmar_contrasena" class="block text-gray-700 text-sm font-bold mb-2">Confirmar Contraseña:</label>
+                <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" placeholder="Confirme su contraseña" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <button type="submit" class="bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Registrarse</button>
+        </form>
+        <div class="mt-4 text-center">
+            <p class="text-gray-600 text-sm">¿Ya tienes una cuenta? <a href="index.php?page=login" class="text-blue-500 hover:text-blue-700 font-semibold">Inicia sesión</a></p>
         </div>
     </div>
-    <script>
-        const confettiCanvas = document.getElementById('confetti-canvas');
-        const confettiInstance = confetti.create(confettiCanvas, {
-            resize: true,
-            useWorker: true
-        });
-    </script>
 </body>
 </html>
