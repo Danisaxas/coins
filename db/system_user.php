@@ -69,7 +69,6 @@ function iniciarSesion($pdo, $username, $contrasena) {
 
         if ($user && $user['contrasena'] === $contrasena) {
             // Iniciar sesión exitosa, guardar datos del usuario en sesión
-            session_start(); // Asegúrate de que la sesión se inicie aquí
             $_SESSION['usuario_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['monedas'] = $user['monedas'];
