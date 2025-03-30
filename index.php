@@ -13,7 +13,7 @@ if (file_exists($db_file_path)) {
 // Determina qué página cargar
 $page = isset($_GET['page']) ? $_GET['page'] : 'register'; // Por defecto a la página de registro
 
-// Output buffering is used to prevent the "headers already sent" error.
+// Output buffering is used to prevent el error "headers already sent".
 ob_start();
 
 if ($page === 'register') {

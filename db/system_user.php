@@ -40,12 +40,12 @@ crearTablaUsuarios($pdo);
 // Función para registrar un nuevo usuario
 function registrarUsuario($pdo, $username, $correo, $contrasena) {
     try {
-        $hashed_password = password_hash($contrasena, PASSWORD_DEFAULT); // Encriptar la contraseña
-        $sql = "INSERT INTO users (username, correo, contrasena) VALUES (:username, :correo, :hashed_password)";
+        // La contraseña se almacena sin encriptar
+        $sql = "INSERT INTO users (username, correo, contrasena) VALUES (:username, :correo, :contrasena)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':correo', $correo);
-        $stmt->bindParam(':hashed_password', $hashed_password);
+        $stmt->bindParam(':contrasena', $contrasena);
         $stmt->execute();
         return true;
     } catch (PDOException $e) {
@@ -67,8 +67,14 @@ function iniciarSesion($pdo, $username, $contrasena) {
         $stmt->execute();
         $user = $stmt->fetch();
 
-        if ($user && password_verify($contrasena, $user['contrasena'])) {
-            return $user;
+        if ($user && $user['contrasena'] === $contrasena) {
+            // Iniciar sesión exitosa, guardar datos del usuario en sesión
+            session_start(); // Asegúrate de que la sesión se inicie aquí
+            $_SESSION['usuario_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['monedas'] = $user['monedas'];
+            $_SESSION['ban'] = $user['ban'];
+            return true;
         } else {
             return false;
         }
