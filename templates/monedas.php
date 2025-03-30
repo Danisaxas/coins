@@ -1,8 +1,8 @@
 <?php
 // templates/monedas.php
-session_start();
+// Ya no es necesario llamar a session_start() aquí
 if (!isset($_SESSION['usuario_id'])) {
-    header("Location: index.php?page=login"); // Redirige a la página de inicio de sesión
+    header("Location: index.php?page=login"); // Redirige si no hay sesión
     exit();
 }
 if ($_SESSION['ban'] == 1){
