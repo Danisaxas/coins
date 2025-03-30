@@ -5,42 +5,30 @@ session_start();
 require_once 'db/system_user.php'; // Incluye el archivo de la base de datos
 
 // Define un array con las rutas permitidas
-$rutasPermitidas = ['register', 'login', 'monedas', 'logout', 'admin_codes'];
+$rutasPermitidas = ['register', 'login', 'home', 'logout', 'admin_codes']; // Agrega 'admin_codes'
 
 // Obtiene la ruta desde la URL
-$ruta = isset($_GET['page']) ? $_GET['page'] : 'monedas'; // La página principal será monedas
-
-// Verifica si la ruta está permitida
-if (!in_array($ruta, $rutasPermitidas)) {
-    $ruta = 'login'; // Si no es válida, usa 'login' como fallback
-}
+$page = isset($_GET['page']) ? $_GET['page'] : 'home'; // Página por defecto a la página principal
 
 // Output buffering
 ob_start();
 
 // Incluye el template correspondiente
-if ($ruta === 'register') {
+if ($page === 'register') {
     include 'templates/register.php';
-} elseif ($ruta === 'login') {
+} elseif ($page === 'login') {
     include 'templates/login.php';
-} elseif ($ruta === 'monedas') {
-    // Verificar si el usuario ha iniciado sesión antes de mostrar la página de monedas
-    if (isset($_SESSION['usuario_id'])) {
-        include 'templates/monedas.php';
-    } else {
-        // Redirige al usuario al login si no está logueado
-        header("Location: login");
-        exit();
-    }
-} elseif ($ruta === 'logout') {
+} elseif ($page === 'home') {
+    include 'templates/monedas.php';
+} elseif ($page === 'logout') {
     include 'templates/logout.php';
-} elseif ($ruta === 'admin_codes') { // Agrega el manejo de la nueva página
+} elseif ($page === 'admin_codes') { // Agrega el manejo de la nueva página
     // Verificar si el usuario es un OWNER
     if (isset($_SESSION['usuario_id']) && $_SESSION['username'] === 'AstroOwn') {
         include 'templates/admin_codes.php';
     } else {
         // Redirigir a una página de error o a la página principal
-        header("Location: monedas");
+        header("Location: index.php?page=home");
         exit();
     }
 } else {
