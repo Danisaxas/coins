@@ -19,7 +19,6 @@
     <div class="bg-white/10 p-8 rounded-xl shadow-lg backdrop-blur-md w-full max-w-md">
         <h2 class="text-3xl font-semibold text-white mb-6 text-center">Iniciar Sesión</h2>
         <?php
-        //  No se inicia la sesión aquí, se inicia en index.php
         if (isset($_SESSION['login_error'])) {
             echo "<div class='bg-red-500/20 border border-red-400 text-red-300 p-4 rounded-md mb-4' role='alert'>
                 <strong class='font-bold'>Error:</strong>
@@ -46,7 +45,7 @@
 </body>
 </html>
 <?php
-    require_once(__DIR__ . '/../db/system_user.php'); // Asegúrate de que la ruta sea correcta
+    require_once('../db/system_user.php'); // Asegúrate de que la ruta sea correcta
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST['username'];
         $contrasena = $_POST['contrasena'];

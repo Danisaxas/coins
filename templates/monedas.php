@@ -22,29 +22,6 @@ if ($_SESSION['ban'] == 1){
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* Estilos para el mensaje grande de recompensa */
-        .recompensa-mensaje {
-            position: fixed; /* Posicionamiento fijo para que aparezca sobre todo lo demás */
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%); /* Centrar el mensaje */
-            background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro semi-transparente */
-            color: white;
-            padding: 24px;
-            border-radius: 8px;
-            font-size: 36px;
-            font-weight: bold;
-            z-index: 1000; /* Asegurar que esté en la parte superior */
-            animation: fadeInOut 2s ease-in-out forwards; /* Animación de aparición y desaparición */
-            opacity: 0;
-        }
-        
-        @keyframes fadeInOut {
-            0% { opacity: 0; }
-            20% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { opacity: 0; }
-        }
     </style>
 </head>
 <body class="bg-gray-900  min-h-screen ">
@@ -84,29 +61,40 @@ if ($_SESSION['ban'] == 1){
         let monedas = <?php echo $_SESSION['monedas']; ?>; // Inicializa con las monedas de la sesión
         let codigoCanjeado = false; // Variable para rastrear si el código ya se canjeó
 
-        function mostrarRecompensa(recompensa) {
-            const mensajeRecompensa = document.createElement('div');
-            mensajeRecompensa.classList.add('recompensa-mensaje');
-            mensajeRecompensa.textContent = `+${recompensa} Monedas`;
-            document.body.appendChild(mensajeRecompensa);
-
-            setTimeout(() => {
-                mensajeRecompensa.remove();
-            }, 2000);
-        }
-
-        function canjearCodigo() {
+        canjearButton.addEventListener("click", () => {
             const codigo = codigoInput.value.toUpperCase();
             if (codigo === "UNITY" && !codigoCanjeado) {
                 monedas += 100;
                 monedasSpan.textContent = `Monedas: ${monedas}`;
-                mensaje.textContent = "¡Código canjeado con éxito!";
+                mensaje.textContent = "¡Código canjeado con éxito! Se han añadido 100 monedas.";
                 mensaje.style.color = "green";
                 codigoCanjeado = true;
-                <?php $_SESSION['monedas'] ?> = monedas;
+                // Actualizar las monedas en la sesión (esto es importante)
+                fetch('actualizar_monedas.php', {  // Crear un nuevo archivo para manejar esto
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `monedas=${monedas}`,
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al actualizar las monedas');
+                    }
+                    return response.text(); // O response.json() si el servidor devuelve JSON
+                })
+                .then(data => {
+                    console.log(data); // Puedes hacer algo con la respuesta del servidor
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    mensaje.textContent = "Error al actualizar las monedas. Por favor, intenta de nuevo.";
+                    mensaje.style.color = "red";
+                });
+
+                 // Deshabilitar el botón después de canjear
                 canjearButton.disabled = true;
                 codigoInput.disabled = true;
-                mostrarRecompensa(100);
 
             } else if (codigo === "") {
                 mensaje.textContent = "Por favor, ingresa un código.";
@@ -114,20 +102,13 @@ if ($_SESSION['ban'] == 1){
             } else if (codigo === "UNITY" && codigoCanjeado) {
                 mensaje.textContent = "El código ya ha sido canjeado.";
                 mensaje.style.color = "red";
-            } else {
+            }else {
                 mensaje.textContent = "Código inválido. Por favor, intenta de nuevo.";
                 mensaje.style.color = "red";
             }
             codigoInput.value = "";
-        }
-
-        canjearButton.addEventListener("click", canjearCodigo);
-
-        codigoInput.addEventListener("keypress", (event) => {
-            if (event.key === "Enter") {
-                canjearCodigo();
-            }
         });
+
     </script>
 </body>
 </html>
