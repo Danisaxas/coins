@@ -1,6 +1,5 @@
 <?php
 // templates/login.php
-ob_start(); // Asegurarse de que no haya salida antes de los encabezados
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -16,53 +15,56 @@ ob_start(); // Asegurarse de que no haya salida antes de los encabezados
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen bg-black">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Inicio de Sesión</h2>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen">
+    <div class="bg-white/10 p-8 rounded-xl shadow-lg backdrop-blur-md w-full max-w-md">
+        <h2 class="text-3xl font-semibold text-white mb-6 text-center">Iniciar Sesión</h2>
         <?php
+        session_start(); // Asegurar que la sesión está iniciada
         if (isset($_SESSION['login_error'])) {
-            echo "<p class='text-red-500 text-sm mt-2'>".$_SESSION['login_error']."</p>";
+            echo "<div class='bg-red-500/20 border border-red-400 text-red-300 p-4 rounded-md mb-4' role='alert'>
+                <strong class='font-bold'>Error:</strong>
+                <span class='block sm:inline'>".$_SESSION['login_error']."</span>
+            </div>";
             unset($_SESSION['login_error']); // Limpia el error después de mostrarlo
         }
         ?>
-        <form method="post" action="index.php?page=login">
-            <div class="mb-4">
-                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Nombre de Usuario:</label>
-                <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <form method="post" action="index.php?page=login" class="space-y-4">
+            <div>
+                <label for="username" class="block text-gray-300 text-sm font-bold mb-2">Nombre de Usuario:</label>
+                <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required class="shadow appearance-none border rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/90">
             </div>
-            <div class="mb-6">
-                <label for="contrasena" class="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
-                <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <div>
+                <label for="contrasena" class="block text-gray-300 text-sm font-bold mb-2">Contraseña:</label>
+                <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="shadow appearance-none border rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/90">
             </div>
-            <button type="submit" class="bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Iniciar Sesión</button>
+            <button type="submit" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline w-full transition duration-300 ease-in-out">Iniciar Sesión</button>
         </form>
-        <div class="mt-4 text-center">
-            <p class="text-gray-600 text-sm">¿No tienes una cuenta? <a href="index.php?page=register" class="text-blue-500 hover:text-blue-700 font-semibold">Regístrate</a></p>
+        <div class="mt-6 text-center">
+            <p class="text-gray-400 text-sm">¿No tienes una cuenta? <a href="index.php?page=register" class="text-blue-400 hover:text-blue-300 font-semibold transition duration-200 ease-in-out">Regístrate</a></p>
         </div>
     </div>
 </body>
 </html>
 <?php
-    require_once(__DIR__ . '/../db/system_user.php');
-    require_once(__DIR__ . '/../db/system_user_queries.php'); // Incluir el nuevo archivo con las funciones de consulta
-
+    require_once('../db/system_user.php'); // Asegúrate de que la ruta sea correcta
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST['username'];
         $contrasena = $_POST['contrasena'];
-        $resultado_inicio_sesion = iniciarSesion($pdo, $username, $contrasena);
+
+        $resultado_inicio_sesion = iniciarSesion($pdo, $username, $contrasena); // Usa la función iniciarSesion
         if ($resultado_inicio_sesion) {
             // Iniciar sesión exitosa, guardar datos del usuario en sesión
             $_SESSION['usuario_id'] = $resultado_inicio_sesion['id'];
             $_SESSION['username'] = $resultado_inicio_sesion['username'];
             $_SESSION['monedas'] = $resultado_inicio_sesion['monedas'];
             $_SESSION['ban'] = $resultado_inicio_sesion['ban'];
-            header("Location: index.php?page=monedas");
-            exit();
+            header("Location: index.php?page=monedas"); // Redirige a la página de monedas
+            exit(); // Importante: Detener la ejecución del script después de la redirección
         } else {
-            $_SESSION['login_error'] = "Credenciales inválidas. Por favor, intenta de nuevo.";
-            header("Location: index.php?page=login");
+            // Error al iniciar sesión
+            $_SESSION['login_error'] = "Credenciales inválidas. Por favor, inténtelo de nuevo.";
+            header("Location: index.php?page=login"); // Redirige de nuevo al formulario de login
             exit();
         }
     }
 ?>
-<?php ob_end_flush(); ?>
