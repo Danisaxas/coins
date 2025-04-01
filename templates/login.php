@@ -22,7 +22,7 @@
             right: 1rem;
             transform: translateY(-50%);
             cursor: pointer;
-            width: 24px;
+            width: 24px; /* Ajusta el tamaño del icono según sea necesario */
             height: 24px;
         }
     </style>
@@ -47,7 +47,8 @@
             <div class="password-container">
                 <label for="contrasena" class="block text-gray-300 text-sm font-bold mb-2">Contraseña:</label>
                 <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="shadow appearance-none border rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/90">
-                <img id="togglePassword" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAsElEQVR4nO2QPQrCQBBGn7Vok9KfSxgv4420Fmz1BuYKaiEaEaK5iq2yMAtjEA0TC5F5MLD77fd2YcFxHMf5V1rf8HfAHujUELpADpxVZvZz4A4cgMEbaQgcpXtSudnvA1cJbsAUSIG2zBiYyVnoXICeujCsC6ufSlhnQrfKyOqvJMyABVCqYilZJvvli4ejvwbm6gc/+hM5SFQWxUgindCt0tR/YgtssNPUdxzH+TEeb9NTKES4HVAAAAAASUVORK5CYII=" alt="closed-eye--v2" class="password-toggle"> </div>
+                <img id="togglePassword" src="resource/hide_password.png" alt="Ocultar contraseña" class="password-toggle">
+             </div>
             <button type="submit" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline w-full transition duration-300 ease-in-out">Iniciar Sesión</button>
         </form>
         <div class="mt-6 text-center">
