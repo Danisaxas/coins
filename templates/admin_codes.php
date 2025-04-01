@@ -5,7 +5,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['username'] !== 'AstroOwn') {
     exit();
 }
 
-require_once('../db/system_user.php');
+require_once(__DIR__ . '/../db/system_user.php'); // Corrige la ruta al archivo
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $codigo = $_POST['codigo'];
@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administración de Códigos</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline w-full transition duration-300 ease-in-out hover:scale-105">Crear Código</button>
         </form>
         <div class="mt-8 text-center">
-            <a href="index.php?page=home" class="text-blue-400 hover:text-blue-300 font-semibold transition duration-200 ease-in-out">Volver a Monedas</a></p>
+            <a href="index.php?page=home" class="text-blue-400 hover:text-blue-300 font-semibold transition duration-200 ease-in-out">Volver a Monedas</a>
         </div>
     </div>
 </body>
