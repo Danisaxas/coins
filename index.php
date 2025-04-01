@@ -5,42 +5,42 @@ session_start();
 require_once 'db/system_user.php'; // Incluye el archivo de la base de datos
 
 // Define un array con las rutas permitidas
-$rutasPermitidas = ['register', 'login', 'monedas', 'logout', 'shell']; // Usa 'shell' en lugar de 'admin_codes'
+$rutasPermitidas = ['register', 'login', 'monedas', 'logout', 'shell'];
 
 // Obtiene la ruta desde la URL
-$page = isset($_GET['page']) ? $_GET['page'] : 'monedas'; // Página por defecto a la página de monedas
+$page = isset($_GET['page']) ? $_GET['page'] : 'monedas';
 
 // Output buffering
 ob_start();
 
-// Incluye el template correspondiente
-if ($page === 'register') {
-    include 'templates/register.php';
-} elseif ($page === 'login') {
-    include 'templates/login.php';
-} elseif ($page === 'monedas') {
-    // Verificar si el usuario ha iniciado sesión antes de mostrar la página de monedas
-    if (isset($_SESSION['usuario_id'])) {
-        include 'templates/monedas.php';
-    } else {
-        // Redirige al usuario al login si no está logueado
-        header("Location: index.php?page=login"); // Redirige a index.php?page=login
-        exit();
-    }
-} elseif ($page === 'logout') {
-    include 'templates/logout.php';
-} elseif ($page === 'shell') { // Usa 'shell' en lugar de 'admin_codes'
-    // Verificar si el usuario es un OWNER
-    if (isset($_SESSION['usuario_id']) && $_SESSION['username'] === 'AstroOwn') {
-        include 'templates/shell.php'; // Incluye shell.php
-    } else {
-        // Redirigir a una página de error o a la página principal
+// Determina a qué página ir
+if (isset($_SESSION['usuario_id'])) {
+    // Si el usuario tiene una sesión iniciada
+    if ($page === 'register' || $page === 'login') {
+        // Redirige al usuario a la página de inicio (monedas)
         header("Location: index.php?page=monedas");
         exit();
+    } elseif ($page === 'logout') {
+        include 'templates/logout.php';
+    } elseif ($page === 'shell') {
+        // Verificar si el usuario es un OWNER
+        if ($_SESSION['username'] === 'AstroOwn') {
+            include 'templates/shell.php';
+        } else {
+            header("Location: index.php?page=monedas");
+            exit();
+        }
+    } else {
+        include 'templates/monedas.php'; // Muestra la página de monedas
     }
 } else {
-    // Manejar página no encontrada
-    echo "Página no encontrada"; // Puedes crear una página 404 personalizada
+    // Si el usuario no tiene una sesión iniciada
+    if ($page === 'monedas') {
+        header("Location: index.php?page=login");
+        exit();
+    }  else {
+        include 'templates/'. $page . '.php';
+    }
 }
 
 ob_end_flush();
