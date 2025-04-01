@@ -5,17 +5,14 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['username'] !== 'AstroOwn') {
     exit();
 }
 
-require_once(__DIR__ . '/../db/system_user.php'); // Corrige la ruta al archivo
+require_once('../db/system_user.php');
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $comando = $_POST['comando'];
-    $respuesta = ejecutarComando($pdo, $comando);
-    $historial[] = [
-        'comando' => "AstroOwn > " . $comando,
-        'respuesta' => $respuesta,
-    ];
-    $_SESSION['terminal_historial'] = $historial;
+// Inicializa el historial de comandos si no existe
+if (!isset($_SESSION['terminal_historial'])) {
+    $_SESSION['terminal_historial'] = [];
 }
+
+$historial = $_SESSION['terminal_historial'];
 
 function ejecutarComando($pdo, $comando) {
     $partes = explode(" ", $comando, 2);
@@ -46,6 +43,16 @@ function ejecutarComando($pdo, $comando) {
             return "<span class='text-yellow-400'>Comando no reconocido. Intente 'coins' o 'ping'.</span>";
     }
 }
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $comando = $_POST['comando'];
+    $respuesta = ejecutarComando($pdo, $comando);
+    $historial[] = [
+        'comando' => "AstroOwn > " . $comando,
+        'respuesta' => $respuesta,
+    ];
+    $_SESSION['terminal_historial'] = $historial;
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -63,8 +70,8 @@ function ejecutarComando($pdo, $comando) {
             line-height: 1.75;
         }
         .container {
-            max-width: 800px;
-            margin: 0 auto;
+            max-width: 800px; /* Ancho máximo */
+            margin: 0 auto; /* Centrar horizontalmente */
             padding: 2rem;
         }
         .terminal-window {
@@ -80,7 +87,7 @@ function ejecutarComando($pdo, $comando) {
             line-height: 1.5rem;
             display: flex;
             flex-direction: column;
-            min-height: 100px;
+            min-height: 200px;
             height: auto;
             overflow-y: auto;
             background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
@@ -183,7 +190,9 @@ function ejecutarComando($pdo, $comando) {
 <body class="bg-gray-900">
     <div class="container">
         <div class="terminal-window">
-            <?php foreach ($historial as $h): ?>
+            <?php 
+             $historial = $_SESSION['terminal_historial'] ?? [];
+            foreach ($historial as $h): ?>
                 <div class="terminal-prompt"><?php echo htmlspecialchars($h['comando']); ?></div>
                 <div class="terminal-output"><?php echo $h['respuesta']; ?></div>
             <?php endforeach; ?>
