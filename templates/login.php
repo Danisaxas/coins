@@ -15,22 +15,21 @@
         }
         .password-container {
             position: relative; /* Para posicionar el icono absolutamente dentro */
-            display: flex; /* Añadido para usar flexbox y centrar verticalmente */
-            align-items: center;
         }
         .password-toggle {
             position: absolute;
             top: 50%;
-            right: 0.75rem;
+            right: 0.75rem; /* Lo coloca al final del padding del input */
             transform: translateY(-50%);
             cursor: pointer;
             width: 24px;
             height: 24px;
-            z-index: 10;
+            z-index: 10; /* Asegura que el icono esté por encima del input */
         }
         .password-input {
-            padding-right: 2.75rem; /* Para dejar espacio al icono */
+          padding-right: 2.75rem; /* Add padding to the right of the input */
         }
+
     </style>
 </head>
 <body class="bg-gray-900 flex items-center justify-center min-h-screen">
@@ -81,7 +80,7 @@
 </body>
 </html>
 <?php
-    require_once(__DIR__ . '/../db/system_user.php'); // Asegúrate de que la ruta sea correcta
+    require_once('../db/system_user.php'); // Asegúrate de que la ruta sea correcta
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST['username'];
         $contrasena = $_POST['contrasena'];
