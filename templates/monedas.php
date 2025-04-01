@@ -16,7 +16,7 @@ function canjearCodigo($pdo, $codigo, $usuario_id) {
         $pdo->beginTransaction();
 
         // 1. Verificar si el código existe y no ha sido usado
-        $sql = "SELECT id, recompensa FROM codes WHERE codigo = :codigo AND usuario IS NULL AND usado = 0";
+        $sql = "SELECT id, recompensa, tipo_recompensa FROM codes WHERE codigo = :codigo AND usuario IS NULL AND usado = 0";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':codigo', $codigo, PDO::PARAM_STR);
         $stmt->execute();
