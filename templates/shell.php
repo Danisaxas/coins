@@ -5,7 +5,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['username'] !== 'AstroOwn') {
     exit();
 }
 
-require_once(__DIR__ . '/../db/system_user.php'); // Corrige la ruta al archivo
+require_once('../db/system_user.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $comando = $_POST['comando'];
@@ -31,19 +31,19 @@ function ejecutarComando($pdo, $comando) {
                 $creada_por = $_SESSION['username'];
                 $resultado_creacion = crearCodigo($pdo, $codigo, $recompensa, $creada_por);
                 if ($resultado_creacion === true) {
-                    return "Código '$codigo' creado con éxito con recompensa de $recompensa monedas.";
+                    return "<span class='text-green-500'>Código '$codigo' creado con éxito con recompensa de $recompensa monedas.</span>";
                 } else {
-                    return "Error: $resultado_creacion";
+                    return "<span class='text-red-500'>Error: $resultado_creacion</span>";
                 }
             } else {
-                return "Error: Formato incorrecto. Use: coins <recompensa> <codigo>";
+                return "<span class='text-red-500'>Error: Formato incorrecto. Use: coins <recompensa> <codigo></span>";
             }
             break;
         case 'PING':
-            return "PONG";
+            return "<span class='text-blue-400'>PONG</span>";
             break;
         default:
-            return "Comando no reconocido. Intente 'coins' o 'ping'.";
+            return "<span class='text-yellow-400'>Comando no reconocido. Intente 'coins' o 'ping'.</span>";
     }
 }
 ?>
@@ -69,25 +69,28 @@ function ejecutarComando($pdo, $comando) {
         }
         .terminal-window {
             background-color: #1e293b;
-            border: 2px solid #4b5563;
+            border: 4px solid #6b7280;
             border-radius: 0.75rem;
             padding: 1rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
             margin-bottom: 2rem;
             overflow-x: auto;
             font-family: monospace;
-            font-size: 1rem;
-            line-height: 1.75rem;
+            font-size: 1.1rem;
+            line-height: 1.5rem;
             display: flex;
             flex-direction: column;
-            min-height: 100px;
+            min-height: 200px;
             height: auto;
             overflow-y: auto;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
+            backdrop-filter: blur(10px);
         }
         .terminal-prompt {
-            color: #6ee7b7;
+            color: #a7f3d0;
             margin-right: 0.5rem;
             flex-shrink: 0;
+            font-weight: bold;
         }
         .terminal-input-container{
             display: flex;
@@ -96,7 +99,7 @@ function ejecutarComando($pdo, $comando) {
             background-color: #0f172a;
             padding: 0.5rem;
             margin-bottom: 0.5rem;
-            border: 2px solid #6b7280;
+            border: 2px solid #a855f7;
             width: 100%;
         }
         .terminal-input {
@@ -105,18 +108,20 @@ function ejecutarComando($pdo, $comando) {
             color: #f8fafc;
             width: 100%;
             font-family: monospace;
-            font-size: 1rem;
-            line-height: 1.75rem;
+            font-size: 1.1rem;
+            line-height: 1.5rem;
             outline: none;
             flex-grow: 1;
         }
         .terminal-input:focus{
             outline: none;
+            box-shadow: 0 0 5px rgba(167, 139, 250, 0.5);
         }
         .terminal-output {
             color: #e2e8f0;
             white-space: pre-wrap;
             margin-top: 0.5rem;
+            font-size: 1rem;
         }
         .form-group {
             margin-bottom: 0;
@@ -135,10 +140,12 @@ function ejecutarComando($pdo, $comando) {
             align-items: center;
             justify-content: center;
             width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
         .btn-primary:hover {
             background-image: linear-gradient(to-r, #7c3aed, #c946e3);
             transform: scale(1.05);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
         }
         .btn-secondary {
             color: #e2e8f0;
@@ -160,6 +167,8 @@ function ejecutarComando($pdo, $comando) {
 
         .text-green-500 { color: #6ee7b7; }
         .text-red-500 { color: #f87171; }
+        .text-yellow-400 { color: #fef08a; }
+        .text-blue-400{color:#60a5fa;}
 
         .mt-8 { margin-top: 2rem; }
         .text-center { text-align: center; }
@@ -176,7 +185,7 @@ function ejecutarComando($pdo, $comando) {
         <div class="terminal-window">
             <?php foreach ($historial as $h): ?>
                 <div class="terminal-prompt"><?php echo htmlspecialchars($h['comando']); ?></div>
-                <div class="terminal-output"><?php echo htmlspecialchars($h['respuesta']); ?></div>
+                <div class="terminal-output"><?php echo $h['respuesta']; ?></div>
             <?php endforeach; ?>
             <div class="flex items-center">
                 <span class="terminal-prompt">AstroOwn:</span>
