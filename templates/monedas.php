@@ -18,7 +18,7 @@ function canjearCodigo($pdo, $codigo, $usuario_id) {
         // 1. Verificar si el código existe y no ha sido usado
         $sql = "SELECT id, recompensa FROM codes WHERE codigo = :codigo AND usuario IS NULL AND usado = 0";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':codigo', $codigo);
+        $stmt->bindParam(':codigo', $codigo, PDO::PARAM_STR);
         $stmt->execute();
         $code = $stmt->fetch();
 
@@ -43,7 +43,7 @@ function canjearCodigo($pdo, $codigo, $usuario_id) {
         $stmt_update_code->execute();
 
         $pdo->commit();
-        return $recompensa; // Devuelve la recompensa para mostrarla al usuario
+        return $mensaje_recompensa; // Devuelve la recompensa para mostrarla al usuario
     } catch (PDOException $e) {
         $pdo->rollBack();
         return "Error al canjear código: " . $e->getMessage();
@@ -99,10 +99,7 @@ function canjearCodigo($pdo, $codigo, $usuario_id) {
                 if (is_numeric($resultado_canjeo)) {
                     $_SESSION['monedas'] += $resultado_canjeo;
                     echo "<p class='text-green-400 text-lg'>¡Código canjeado con éxito! Se han añadido $resultado_canjeo monedas.</p>";
-                     echo "<script>
-                        const monedasSpan = document.getElementById('monedas');
-                        monedasSpan.textContent = 'Monedas: ' + " . json_encode($_SESSION['monedas']) . ";
-                    </script>";
+                    
                 } else {
                     echo "<p class='text-red-400 text-lg'>$resultado_canjeo</p>";
                 }
