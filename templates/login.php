@@ -15,8 +15,6 @@
         }
         .password-container {
             position: relative; /* Para posicionar el icono absolutamente dentro */
-            display: flex; /* Añadido para usar flexbox y centrar verticalmente */
-            align-items: center;
         }
         .password-toggle {
             position: absolute;
@@ -51,7 +49,7 @@
                 <label for="username" class="block text-gray-300 text-sm font-bold mb-2">Nombre de Usuario:</label>
                 <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required class="shadow appearance-none border rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/90">
             </div>
-            <div class="password-container">
+            <div>
                 <label for="contrasena" class="block text-gray-300 text-sm font-bold mb-2">Contraseña:</label>
                 <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="password-input shadow appearance-none border rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/90">
                 <img id="togglePassword" src="resource/hide_password.png" alt="Ocultar contraseña" class="password-toggle">
@@ -82,7 +80,7 @@
 </body>
 </html>
 <?php
-    require_once('../db/system_user.php'); // Asegúrate de que la ruta sea correcta
+    require_once(__DIR__ . '/../db/system_user.php'); // Asegúrate de que la ruta sea correcta
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST['username'];
         $contrasena = $_POST['contrasena'];
