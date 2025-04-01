@@ -1,21 +1,18 @@
 <?php
 // templates/shell.php
 if (!isset($_SESSION['usuario_id']) || $_SESSION['username'] !== 'AstroOwn') {
-    header("Location: index.php?page=home");
+    header("Location: index.php?page=monedas");
     exit();
 }
 
-require_once(__DIR__ . '/../db/system_user.php'); // Corrige la ruta al archivo
+require_once('../db/system_user.php');
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $comando = $_POST['comando'];
-    $respuesta = ejecutarComando($pdo, $comando);
-    $historial[] = [
-        'comando' => "AstroOwn > " . $comando,
-        'respuesta' => $respuesta,
-    ];
-    $_SESSION['terminal_historial'] = $historial;
+// Inicializa el historial de comandos si no existe
+if (!isset($_SESSION['terminal_historial'])) {
+    $_SESSION['terminal_historial'] = [];
 }
+
+$historial = $_SESSION['terminal_historial'];
 
 function ejecutarComando($pdo, $comando) {
     $partes = explode(" ", $comando, 2);
@@ -46,6 +43,16 @@ function ejecutarComando($pdo, $comando) {
             return "<span class='text-yellow-400'>Comando no reconocido. Intente 'coins' o 'ping'.</span>";
     }
 }
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $comando = $_POST['comando'];
+    $respuesta = ejecutarComando($pdo, $comando);
+    $historial[] = [
+        'comando' => "AstroOwn > " . $comando,
+        'respuesta' => $respuesta,
+    ];
+    $_SESSION['terminal_historial'] = $historial;
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -69,7 +76,7 @@ function ejecutarComando($pdo, $comando) {
         }
         .terminal-window {
             background-color: #1e293b;
-            border: 2px solid #4b5563;
+            border: 4px solid #4b5563;
             border-radius: 0.75rem;
             padding: 1rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
