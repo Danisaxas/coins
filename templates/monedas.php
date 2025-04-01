@@ -9,14 +9,14 @@ if ($_SESSION['ban'] == 1) {
     exit();
 }
 
-require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la base de datos
+require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
 
 function canjearCodigo($pdo, $codigo, $usuario_id) {
     try {
         $pdo->beginTransaction();
 
         // 1. Verificar si el código existe y no ha sido usado
-        $sql = "SELECT id, recompensa, tipo_recompensa FROM codes WHERE codigo = :codigo AND usuario IS NULL AND usado = 0";
+        $sql = "SELECT id, recompensa, usado FROM codes WHERE codigo = :codigo";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':codigo', $codigo, PDO::PARAM_STR);
         $stmt->execute();
@@ -24,8 +24,14 @@ function canjearCodigo($pdo, $codigo, $usuario_id) {
 
         if (!$code) {
             $pdo->rollBack();
-            return "Código inválido o ya utilizado.";
+            return "Código inválido.";
         }
+
+        if ($code['usado'] == 1) {
+             $pdo->rollBack();
+            return "El código ya ha sido canjeado.";
+        }
+
 
         // 2. Actualizar la tabla 'users' para añadir las monedas
         $recompensa = $code['recompensa'];
@@ -43,7 +49,7 @@ function canjearCodigo($pdo, $codigo, $usuario_id) {
         $stmt_update_code->execute();
 
         $pdo->commit();
-        return $mensaje_recompensa; // Devuelve la recompensa para mostrarla al usuario
+        return $recompensa; // Devuelve la recompensa para mostrarla al usuario
     } catch (PDOException $e) {
         $pdo->rollBack();
         return "Error al canjear código: " . $e->getMessage();
@@ -101,6 +107,7 @@ function canjearCodigo($pdo, $codigo, $usuario_id) {
                 } else {
                     $_SESSION['monedas'] += $resultado_canjeo;
                     echo "<p class='text-green-400 text-lg'>¡Código canjeado con éxito! Se han añadido $resultado_canjeo monedas.</p>";
+                   
                 }
             }
             ?>
