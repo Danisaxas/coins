@@ -9,7 +9,7 @@ if ($_SESSION['ban'] == 1) {
     exit();
 }
 
-require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la base de datos
+require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
 
 function canjearCodigo($pdo, $codigo, $usuario_id) {
     try {
@@ -99,15 +99,10 @@ function canjearCodigo($pdo, $codigo, $usuario_id) {
                 if (is_numeric($resultado_canjeo)) {
                     $_SESSION['monedas'] += $resultado_canjeo;
                     echo "<p class='text-green-400 text-lg'>¡Código canjeado con éxito! Se han añadido $resultado_canjeo monedas.</p>";
-                    echo "<script>
+                     echo "<script>
                         const monedasSpan = document.getElementById('monedas');
-                        monedasSpan.textContent = 'Monedas: ' + " . $_SESSION['monedas'] . ";
-                        const codigoInput = document.getElementById('codigo');
-                        codigoInput.disabled = true;
-                        const canjearButton = document.getElementById('canjear');
-                        canjearButton.disabled = true;
+                        monedasSpan.textContent = 'Monedas: ' + " . json_encode($_SESSION['monedas']) . ";
                     </script>";
-
                 } else {
                     echo "<p class='text-red-400 text-lg'>$resultado_canjeo</p>";
                 }
