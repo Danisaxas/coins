@@ -9,14 +9,14 @@ if ($_SESSION['ban'] == 1) {
     exit();
 }
 
-require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
+require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la base de datos
 
 function canjearCodigo($pdo, $codigo, $usuario_id) {
     try {
         $pdo->beginTransaction();
 
         // 1. Verificar si el código existe y no ha sido usado
-        $sql = "SELECT id, recompensa, usado FROM codes WHERE codigo = :codigo";
+        $sql = "SELECT id, recompensa, tipo_recompensa FROM codes WHERE codigo = :codigo AND usuario IS NULL AND usado = 0";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':codigo', $codigo, PDO::PARAM_STR);
         $stmt->execute();
@@ -24,14 +24,8 @@ function canjearCodigo($pdo, $codigo, $usuario_id) {
 
         if (!$code) {
             $pdo->rollBack();
-            return "Código inválido.";
+            return "Código inválido o ya utilizado.";
         }
-
-        if ($code['usado'] == 1) {
-             $pdo->rollBack();
-            return "El código ya ha sido canjeado.";
-        }
-
 
         // 2. Actualizar la tabla 'users' para añadir las monedas
         $recompensa = $code['recompensa'];
