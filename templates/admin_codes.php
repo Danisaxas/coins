@@ -1,11 +1,11 @@
 <?php
 // templates/admin_codes.php
 if (!isset($_SESSION['usuario_id']) || $_SESSION['username'] !== 'AstroOwn') {
-    header("Location: index.php?page=home");
+    header("Location: index.php?page=monedas"); // Redirige si no es el OWNER
     exit();
 }
 
-require_once(__DIR__ . '/../db/system_user.php'); // Corrige la ruta al archivo
+require_once('../db/system_user.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $codigo = $_POST['codigo'];
@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline w-full transition duration-300 ease-in-out hover:scale-105">Crear Código</button>
         </form>
         <div class="mt-8 text-center">
-            <a href="index.php?page=home" class="text-blue-400 hover:text-blue-300 font-semibold transition duration-200 ease-in-out">Volver a Monedas</a>
+            <a href="index.php?page=monedas" class="text-blue-400 hover:text-blue-300 font-semibold transition duration-200 ease-in-out">Volver a Monedas</a>
         </div>
     </div>
 </body>
