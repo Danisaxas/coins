@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -22,7 +22,7 @@
             right: 1rem;
             transform: translateY(-50%);
             cursor: pointer;
-            width: 24px; /* Ajusta el tamaño del icono según sea necesario */
+            width: 24px;
             height: 24px;
         }
     </style>
@@ -62,19 +62,19 @@
         togglePasswordButton.addEventListener('click', () => {
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                togglePasswordButton.src = "https://unpkg.com/feather-icons@4.29.1/icons/eye-off.svg"; // Cambia a ojo cerrado
-                togglePasswordButton.alt = "Ocultar contraseña";
+                togglePasswordButton.src = "resource/show_password.png";
+                togglePasswordButton.alt = "Mostrar contraseña";
             } else {
                 passwordInput.type = 'password';
-                togglePasswordButton.src = "https://unpkg.com/feather-icons@4.29.1/icons/eye.svg"; // Cambia a ojo abierto
-                togglePasswordButton.alt = "Mostrar contraseña";
+                togglePasswordButton.src = "resource/hide_password.png";
+                togglePasswordButton.alt = "Ocultar contraseña";
             }
         });
     </script>
 </body>
 </html>
 <?php
-    require_once(__DIR__ . '/../db/system_user.php'); // Asegúrate de que la ruta sea correcta
+    require_once('../db/system_user.php'); // Asegúrate de que la ruta sea correcta
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST['username'];
         $contrasena = $_POST['contrasena'];
