@@ -5,7 +5,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['username'] !== 'AstroOwn') {
     exit();
 }
 
-require_once('../db/system_user.php');
+require_once(__DIR__ . '/../db/system_user.php'); // Corrige la ruta al archivo
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $comando = $_POST['comando'];
@@ -69,10 +69,10 @@ function ejecutarComando($pdo, $comando) {
         }
         .terminal-window {
             background-color: #1e293b;
-            border: 4px solid #6b7280;
+            border: 2px solid #4b5563;
             border-radius: 0.75rem;
             padding: 1rem;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
             margin-bottom: 2rem;
             overflow-x: auto;
             font-family: monospace;
@@ -87,7 +87,7 @@ function ejecutarComando($pdo, $comando) {
             backdrop-filter: blur(10px);
         }
         .terminal-prompt {
-            color: #a7f3d0;
+            color: #6ee7b7;
             margin-right: 0.5rem;
             flex-shrink: 0;
             font-weight: bold;
@@ -108,7 +108,7 @@ function ejecutarComando($pdo, $comando) {
             color: #f8fafc;
             width: 100%;
             font-family: monospace;
-            font-size: 1.1rem;
+            font-size: 1rem;
             line-height: 1.5rem;
             outline: none;
             flex-grow: 1;
