@@ -5,7 +5,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['username'] !== 'AstroOwn') {
     exit();
 }
 
-require_once(__DIR__ . '/../db/system_user.php'); // Corrige la ruta al archivo
+require_once('../db/system_user.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $codigo = $_POST['codigo'];
@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administración de Códigos</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
