@@ -8,13 +8,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
         }
         .password-container {
             position: relative; /* Para posicionar el icono absolutamente dentro */
+            display: flex; /* Añadido para usar flexbox y centrar verticalmente */
+            align-items: center;
         }
         .password-toggle {
             position: absolute;
@@ -27,7 +29,7 @@
             z-index: 10; /* Asegura que el icono esté por encima del input */
         }
         .password-input {
-          padding-right: 2.75rem; /* Add padding to the right of the input */
+            padding-right: 2.75rem; /* Add padding to the right of the input */
         }
 
     </style>
@@ -80,7 +82,7 @@
 </body>
 </html>
 <?php
-    require_once(__DIR__ . '/../db/system_user.php'); // Asegúrate de que la ruta sea correcta
+    require_once('../db/system_user.php'); // Asegúrate de que la ruta sea correcta
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST['username'];
         $contrasena = $_POST['contrasena'];
