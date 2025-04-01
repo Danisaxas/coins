@@ -1,29 +1,23 @@
 <?php
 // templates/admin_codes.php
 if (!isset($_SESSION['usuario_id']) || $_SESSION['username'] !== 'AstroOwn') {
-    header("Location: index.php?page=home");
+    header("Location: index.php?page=home"); // Redirige si no es el OWNER
     exit();
 }
 
-require_once('../db/system_user.php');
+require_once(__DIR__ . '/../db/system_user.php'); // Corrige la ruta al archivo
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $codigo = $_POST['codigo'];
     $recompensa = $_POST['recompensa'];
-    $creada_por = $_SESSION['username'];
+    $creada_por = $_SESSION['username']; // Obtiene el username del OWNER
 
     $resultado_creacion = crearCodigo($pdo, $codigo, $recompensa, $creada_por);
 
     if ($resultado_creacion === true) {
-        echo "<div class='bg-green-500/20 border border-green-400 text-green-300 p-4 rounded-md mb-4 text-center' role='alert'>
-                <strong class='font-bold'>Éxito:</strong>
-                <span class='block sm:inline'>Código creado con éxito.</span>
-            </div>";
+        echo "<p class='text-green-500 text-sm mt-2 text-center'>Código creado con éxito.</p>";
     } else {
-        echo "<div class='bg-red-500/20 border border-red-400 text-red-300 p-4 rounded-md mb-4 text-center' role='alert'>
-                <strong class='font-bold'>Error:</strong>
-                <span class='block sm:inline'>$resultado_creacion</span>
-            </div>";
+        echo "<p class='text-red-500 text-sm mt-2 text-center'>$resultado_creacion</p>";
     }
 }
 ?>
@@ -34,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administración de Códigos</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
