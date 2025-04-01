@@ -1,16 +1,57 @@
 <?php
 // templates/shell.php
 if (!isset($_SESSION['usuario_id']) || $_SESSION['username'] !== 'AstroOwn') {
-    header("Location: index.php?page=home");
+    header("Location: index.php?page=monedas");
     exit();
 }
 
-require_once(__DIR__ . '/../db/system_user.php'); // Corrige la ruta al archivo
+require_once('../db/system_user.php');
+
+// Función para ejecutar el comando y obtener la respuesta
+function ejecutarComando($pdo, $comando) {
+    $partes = explode(" ", $comando, 2);
+    $nombreComando = strtoupper($partes[0]);
+    $argumento = isset($partes[1]) ? trim($partes[1]) : '';
+
+    switch ($nombreComando) {
+        case 'COINS':
+            $datos = explode(" ", $argumento);
+            if (count($datos) == 2 && is_numeric($datos[0])) {
+                $recompensa = intval($datos[0]);
+                $codigo = trim($datos[1]);
+                $creada_por = $_SESSION['username'];
+                $resultado_creacion = crearCodigo($pdo, $codigo, $recompensa, $creada_por);
+                if ($resultado_creacion === true) {
+                    return "Código '$codigo' creado con éxito con recompensa de $recompensa monedas.";
+                } else {
+                    return "Error: $resultado_creacion";
+                }
+            } else {
+                return "Error: Formato incorrecto. Use: coins <recompensa> <codigo>";
+            }
+            break;
+        case 'PING':
+            return "PONG";
+            break;
+        default:
+            return "Comando no reconocido. Intente 'coins' o 'ping'.";
+    }
+}
+
+// Inicializa el historial de comandos y la respuesta
+$historial = $_SESSION['historial'] ?? [];
+$respuesta = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $comando = $_POST['comando'];
     $respuesta = ejecutarComando($pdo, $comando);
+    $historial[] = [
+        'comando' => "$AstroOwn: $comando",
+        'respuesta' => $respuesta,
+    ];
+    $_SESSION['historial'] = $historial;
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -45,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             line-height: 1.75rem;
             display: flex;
             flex-direction: column;
-            min-height: 100px;
+            min-height: 200px;
             height: auto;
         }
         .terminal-prompt {
@@ -56,11 +97,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .terminal-input-container{
             display: flex;
             align-items: center;
-            border-radius: 1rem;
+            border-radius: 0.5rem;
             background-color: #0f172a;
             padding: 0.5rem;
             margin-bottom: 0.5rem;
             border: 2px solid #6b7280;
+            width: 100%;
         }
         .terminal-input {
             background-color: transparent;
@@ -72,6 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             line-height: 1.75rem;
             outline: none;
             flex-grow: 1;
+           
         }
         .terminal-input:focus{
             outline: none;
@@ -85,24 +128,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin-bottom: 0;
         }
 
-        .btn-primary {
-            background-image: linear-gradient(to-r, #8b5cf6, #d946ef);
-            color: #f8fafc;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.375rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-        }
-        .btn-primary:hover {
-            background-image: linear-gradient(to-r, #7c3aed, #c946e3);
-            transform: scale(1.05);
-        }
         .btn-secondary {
             color: #e2e8f0;
             padding: 0.75rem 1.5rem;
@@ -139,9 +164,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="terminal-window">
             <div class="terminal-prompt">AstroOwn:</div>
             <div  class="terminal-output">Administración de Códigos</div>
+             <?php if (!empty($historial)): ?>
+                <?php foreach ($historial as $item): ?>
+                    <div class="terminal-prompt"><?php echo htmlspecialchars($item['comando']); ?></div>
+                    <div class="terminal-output"><?php echo htmlspecialchars($item['respuesta']); ?></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
             <form method="post" action="index.php?page=shell" class="mt-4">
                 <div class="form-group">
-                    
                     <div class="terminal-input-container">
                          <span class="terminal-prompt"> > </span>
                          <input type="text" id="comando" name="comando" placeholder="Ingrese el comando (ej: coins 100 CODIGO)" required class="terminal-input">
