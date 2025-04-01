@@ -13,6 +13,18 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+        .password-container {
+            position: relative;
+        }
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            cursor: pointer;
+            width: 24px; /* Ajusta el tamaño del icono según sea necesario */
+            height: 24px;
+        }
     </style>
 </head>
 <body class="bg-gray-900 flex items-center justify-center min-h-screen">
@@ -32,20 +44,37 @@
                 <label for="username" class="block text-gray-300 text-sm font-bold mb-2">Nombre de Usuario:</label>
                 <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required class="shadow appearance-none border rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/90">
             </div>
-            <div>
+            <div class="password-container">
                 <label for="contrasena" class="block text-gray-300 text-sm font-bold mb-2">Contraseña:</label>
                 <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="shadow appearance-none border rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/90">
-            </div>
+                <img id="togglePassword" src="https://unpkg.com/feather-icons@4.29.1/icons/eye.svg" alt="Mostrar contraseña" class="password-toggle"> </div>
             <button type="submit" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline w-full transition duration-300 ease-in-out">Iniciar Sesión</button>
         </form>
         <div class="mt-6 text-center">
             <p class="text-gray-400 text-sm">¿No tienes una cuenta? <a href="index.php?page=register" class="text-blue-400 hover:text-blue-300 font-semibold transition duration-200 ease-in-out">Regístrate</a></p>
         </div>
     </div>
+
+    <script>
+        const passwordInput = document.getElementById('contrasena');
+        const togglePasswordButton = document.getElementById('togglePassword');
+
+        togglePasswordButton.addEventListener('click', () => {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                togglePasswordButton.src = "https://unpkg.com/feather-icons@4.29.1/icons/eye-off.svg"; // Cambia a ojo cerrado
+                togglePasswordButton.alt = "Ocultar contraseña";
+            } else {
+                passwordInput.type = 'password';
+                togglePasswordButton.src = "https://unpkg.com/feather-icons@4.29.1/icons/eye.svg"; // Cambia a ojo abierto
+                togglePasswordButton.alt = "Mostrar contraseña";
+            }
+        });
+    </script>
 </body>
 </html>
 <?php
-    require_once(__DIR__ . '/../db/system_user.php'); // Asegúrate de que la ruta sea correcta
+    require_once('../db/system_user.php'); // Asegúrate de que la ruta sea correcta
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST['username'];
         $contrasena = $_POST['contrasena'];
