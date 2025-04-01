@@ -1,157 +1,107 @@
 <?php
-// templates/monedas.php
-if (!isset($_SESSION['usuario_id'])) {
-    header("Location: index.php?page=login");
-    exit();
-}
-if ($_SESSION['ban'] == 1) {
-    echo "Usuario Baneado";
-    exit();
-}
-
-require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
-
-function canjearCodigo($pdo, $codigo, $usuario_id) {
-    try {
-        $pdo->beginTransaction();
-
-        // 1. Verificar si el código existe y no ha sido usado
-        $sql = "SELECT id, recompensa FROM codes WHERE codigo = :codigo AND usuario IS NULL AND usado = 0";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':codigo', $codigo, PDO::PARAM_STR);
-        $stmt->execute();
-        $code = $stmt->fetch();
-
-        if (!$code) {
-            $pdo->rollBack();
-            return "Código inválido o ya utilizado.";
-        }
-
-        // 2. Actualizar la tabla 'users' para añadir las monedas
-        $recompensa = $code['recompensa'];
-        $sql_update_user = "UPDATE users SET monedas = monedas + :recompensa WHERE id = :usuario_id";
-        $stmt_update_user = $pdo->prepare($sql_update_user);
-        $stmt_update_user->bindParam(':recompensa', $recompensa, PDO::PARAM_INT);
-        $stmt_update_user->bindParam(':usuario_id', $usuario_id, PDO::PARAM_INT);
-        $stmt_update_user->execute();
-
-        // 3. Actualizar la tabla 'codes' para marcar el código como usado
-        $sql_update_code = "UPDATE codes SET usuario = :usuario_id, usado = 1 WHERE id = :code_id";
-        $stmt_update_code = $pdo->prepare($sql_update_code);
-        $stmt_update_code->bindParam(':usuario_id', $usuario_id, PDO::PARAM_INT);
-        $stmt_update_code->bindParam(':code_id', $code['id'], PDO::PARAM_INT);
-        $stmt_update_code->execute();
-
-        $pdo->commit();
-        return $recompensa; // Devuelve la recompensa para mostrarla al usuario
-    } catch (PDOException $e) {
-        $pdo->rollBack();
-        return "Error al canjear código: " . $e->getMessage();
-    }
-}
-
-
+// templates/login.php
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Monedas</title>
+    <title>Inicio de Sesión</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
         }
+        .password-container {
+            position: relative; /* Para posicionar el icono absolutamente dentro */
+        }
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 0.75rem; /* Lo coloca al final del padding del input */
+            transform: translateY(-50%);
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            z-index: 10; /* Asegura que el icono esté por encima del input */
+        }
+        .password-input {
+            padding-right: 2.75rem; /* Para dejar espacio al icono */
+        }
+
     </style>
 </head>
 <body class="bg-gray-900 flex items-center justify-center min-h-screen">
     <div class="bg-white/10 p-8 rounded-xl shadow-lg backdrop-blur-md w-full max-w-md">
-        <div class="flex justify-between items-start mb-6">
-            <?php if (isset($_SESSION['usuario_id']) && $_SESSION['username'] === 'AstroOwn'): ?>
-                <a href="index.php?page=shell" class="bg-blue-500/20 border border-blue-400 text-blue-300 font-semibold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition duration-300 ease-in-out hover:scale-105 text-left">
-                    Terminal </>
-                </a>
-            <?php endif; ?>
-            <a href="index.php?page=logout" class="bg-red-500/20 border border-red-400 text-red-300 font-semibold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition duration-300 ease-in-out hover:scale-105 text-right">Cerrar Sesión</a>
-        </div>
-        <h2 class="text-3xl font-semibold text-white mb-6 text-center">Sistema de Monedas</h2>
-        <p class="text-gray-400 text-center mb-4">Bienvenido, <?php echo $_SESSION['username']; ?>!</p>
-        <p class="text-gray-400 text-center mb-6">Tienes <strong><?php echo $_SESSION['monedas']; ?></strong> monedas.</p>
-
-        <form method="post" action="" class="space-y-4">
+        <h2 class="text-3xl font-semibold text-white mb-6 text-center">Iniciar Sesión</h2>
+        <?php
+        if (isset($_SESSION['login_error'])) {
+            echo "<div class='bg-red-500/20 border border-red-400 text-red-300 p-4 rounded-md mb-4' role='alert'>
+                <strong class='font-bold'>Error:</strong>
+                <span class='block sm:inline'>".$_SESSION['login_error']."</span>
+            </div>";
+            unset($_SESSION['login_error']); // Limpia el error después de mostrarlo
+        }
+        ?>
+        <form method="post" action="index.php?page=login" class="space-y-6">
             <div>
-                <label for="codigo" class="block text-gray-300 text-sm font-bold mb-2">Código:</label>
-                <input type="text" id="codigo" name="codigo" placeholder="Ingrese su código" required class="shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
+                <label for="username" class="block text-gray-300 text-sm font-bold mb-2">Nombre de Usuario:</label>
+                <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required class="shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
             </div>
-             <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
-            <button type="submit" id="canjear" class="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline w-full transition duration-300 ease-in-out hover:scale-105 mt-4">Canjear</button>
+            <div>
+                <label for="contrasena" class="block text-gray-300 text-sm font-bold mb-2">Contraseña:</label>
+                <div class="password-container">
+                    <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="password-input shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
+                    <img id="togglePassword" src="resource/hide_password.png" alt="Ocultar contraseña" class="password-toggle">
+                </div>
+            </div>
+            <button type="submit" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline w-full transition duration-300 ease-in-out
+             hover:scale-105">Iniciar Sesión</button>
         </form>
-
-        <div id="mensaje" class="mt-6 text-gray-400 text-center">
-             <?php
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                 if (isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response'])) {
-                    // La clave secreta de reCAPTCHA
-                    $secret = '6LcC6wUrAAAAANazsU9wZNQeXM2kFTXsTc7pVc5l';
-                    
-                    // Obtiene la respuesta del usuario
-                    $response = $_POST['g-recaptcha-response'];
-                    
-                    // Construye la URL para verificar la respuesta
-                    $url = 'https://www.google.com/recaptcha/api/siteverify';
-                    $params = array(
-                        'secret'    => $secret,
-                        'response'  => $response,
-                        'remoteip'  => $_SERVER['REMOTE_ADDR']
-                    );
-                    
-                    $ch = curl_init($url);
-                    curl_setopt($ch, CURLOPT_POST, 1);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    $result = curl_exec($ch);
-                    curl_close($ch);
-                    
-                    $decodedResponse = json_decode($result, true);
-                   
-                    if ($decodedResponse['success'] == true) {
-                        $codigo = $_POST['codigo'];
-                        $usuario_id = $_SESSION['usuario_id'];
-                
-                        $resultado_canjeo = canjearCodigo($pdo, $codigo, $usuario_id);
-                
-                        if (is_string($resultado_canjeo)) {
-                            echo "<p class='text-red-400 text-lg'>$resultado_canjeo</p>";
-                        } else {
-                            $_SESSION['monedas'] += $resultado_canjeo;
-                            echo "<p class='text-green-400 text-lg'>¡Código canjeado con éxito! Se han añadido $resultado_canjeo monedas.</p>";
-                           
-                        }
-                     }else{
-                         echo "<p class='text-red-400 text-lg'>ReCAPTCHA inválido. Por favor, inténtelo de nuevo.</p>";
-                     }
-                }else{
-                     echo "<p class='text-red-400 text-lg'>Por favor, complete el reCAPTCHA.</p>";
-                }
-               
-            }
-            ?>
+        <div class="mt-8 text-center">
+            <p class="text-gray-400 text-sm">¿No tienes una cuenta? <a href="index.php?page=register" class="text-blue-400 hover:text-blue-300 font-semibold transition duration-200 ease-in-out">Regístrate</a></p>
         </div>
     </div>
 
     <script>
-        const monedasSpan = document.getElementById("monedas");
-        const codigoInput = document.getElementById("codigo");
-        const canjearButton = document.getElementById("canjear");
-        const mensaje = document.getElementById("mensaje");
+        const passwordInput = document.getElementById('contrasena');
+        const togglePasswordButton = document.getElementById('togglePassword');
 
-
-        let monedas = <?php echo $_SESSION['monedas']; ?>;
-
-        
+        togglePasswordButton.addEventListener('click', () => {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                togglePasswordButton.src = "resource/show_password.png";
+                togglePasswordButton.alt = "Mostrar contraseña";
+            } else {
+                passwordInput.type = 'password';
+                togglePasswordButton.src = "resource/hide_password.png";
+                togglePasswordButton.alt = "Ocultar contraseña";
+            }
+        });
     </script>
 </body>
 </html>
+<?php
+    require_once(__DIR__ . '/../db/system_user.php'); // Asegúrate de que la ruta sea correcta
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $username = $_POST['username'];
+        $contrasena = $_POST['contrasena'];
+
+        $resultado_inicio_sesion = iniciarSesion($pdo, $username, $contrasena); // Usa la función iniciarSesion
+        if ($resultado_inicio_sesion) {
+            // Iniciar sesión exitosa, guardar datos del usuario en sesión
+            $_SESSION['usuario_id'] = $resultado_inicio_sesion['id'];
+            $_SESSION['username'] = $resultado_inicio_sesion['username'];
+            $_SESSION['monedas'] = $resultado_inicio_sesion['monedas'];
+            $_SESSION['ban'] = $resultado_inicio_sesion['ban'];
+            header("Location: index.php?page=monedas"); // Redirige a la página de monedas
+            exit(); // Importante: Detener la ejecución del script después de la redirección
+        } else {
+            // Error al iniciar sesión
+            $_SESSION['login_error'] = "Credenciales inválidas. Por favor, inténtelo de nuevo.";
+            header("Location: index.php?page=login"); // Redirige de nuevo al formulario de login
+            exit();
+        }
+    }
+?>
