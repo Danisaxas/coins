@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -74,7 +74,7 @@
 </body>
 </html>
 <?php
-    require_once('../db/system_user.php'); // Asegúrate de que la ruta sea correcta
+    require_once(__DIR__ . '/../db/system_user.php'); // Asegúrate de que la ruta sea correcta
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST['username'];
         $contrasena = $_POST['contrasena'];
