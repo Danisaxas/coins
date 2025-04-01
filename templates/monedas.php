@@ -9,7 +9,7 @@ if ($_SESSION['ban'] == 1) {
     exit();
 }
 
-require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la base de datos
+require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
 
 function canjearCodigo($pdo, $codigo, $usuario_id) {
     try {
@@ -43,7 +43,7 @@ function canjearCodigo($pdo, $codigo, $usuario_id) {
         $stmt_update_code->execute();
 
         $pdo->commit();
-        return $recompensa; // Devuelve la recompensa para mostrarla al usuario
+        return $mensaje_recompensa; // Devuelve la recompensa para mostrarla al usuario
     } catch (PDOException $e) {
         $pdo->rollBack();
         return "Error al canjear código: " . $e->getMessage();
@@ -108,16 +108,6 @@ function canjearCodigo($pdo, $codigo, $usuario_id) {
         </div>
     </div>
 
-    <script>
-        const monedasSpan = document.getElementById("monedas");
-        const codigoInput = document.getElementById("codigo");
-        const canjearButton = document.getElementById("canjear");
-        const mensaje = document.getElementById("mensaje");
-
-
-        let monedas = <?php echo $_SESSION['monedas']; ?>;
-
-        
-    </script>
+    
 </body>
 </html>
