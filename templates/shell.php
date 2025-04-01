@@ -5,26 +5,41 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['username'] !== 'AstroOwn') {
     exit();
 }
 
-require_once(__DIR__ . '/../db/system_user.php'); // Corrige la ruta al archivo
+require_once('../db/system_user.php');
+
+function ejecutarComando($pdo, $comando) {
+    $partes = explode(" ", $comando, 2);
+    $nombreComando = strtoupper($partes[0]);
+    $argumento = isset($partes[1]) ? trim($partes[1]) : '';
+
+    switch ($nombreComando) {
+        case 'COINS':
+            $datos = explode(" ", $argumento);
+            if (count($datos) == 2 && is_numeric($datos[0])) {
+                $recompensa = intval($datos[0]);
+                $codigo = trim($datos[1]);
+                $creada_por = $_SESSION['username'];
+                $resultado_creacion = crearCodigo($pdo, $codigo, $recompensa, $creada_por);
+                if ($resultado_creacion === true) {
+                    return "Código '$codigo' creado con éxito con recompensa de $recompensa monedas.";
+                } else {
+                    return "Error: $resultado_creacion";
+                }
+            } else {
+                return "Error: Formato incorrecto. Use: coins <recompensa> <codigo>";
+            }
+            break;
+        case 'PING':
+                return "PONG";
+            break;
+        default:
+            return "Comando no reconocido. Intente 'coins' o 'ping'.";
+    }
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $codigo = $_POST['codigo'];
-    $recompensa = $_POST['recompensa'];
-    $creada_por = $_SESSION['username'];
-
-    $resultado_creacion = crearCodigo($pdo, $codigo, $recompensa, $creada_por);
-
-    if ($resultado_creacion === true) {
-        echo "<div class='bg-green-500/20 border border-green-400 text-green-300 p-4 rounded-md mb-4 text-center' role='alert'>
-                <strong class='font-bold'>Éxito:</strong>
-                <span class='block sm:inline'>Código creado con éxito.</span>
-            </div>";
-    } else {
-        echo "<div class='bg-red-500/20 border border-red-400 text-red-300 p-4 rounded-md mb-4 text-center' role='alert'>
-                <strong class='font-bold'>Error:</strong>
-                <span class='block sm:inline'>$resultado_creacion</span>
-            </div>";
-    }
+    $comando = $_POST['comando'];
+    $respuesta = ejecutarComando($pdo, $comando);
 }
 ?>
 <!DOCTYPE html>
@@ -32,36 +47,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administración de Códigos</title>
+    <title>Terminal de Administración</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a; /* Fondo oscuro */
-            color: #e2e8f0; /* Texto claro */
-            line-height: 1.5;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.75;
         }
         .container {
-            max-width: 800px; /* Ancho máximo */
-            margin: 0 auto; /* Centrar horizontalmente */
+            max-width: 800px;
+            margin: 0 auto;
             padding: 2rem;
         }
         .terminal-window {
             background-color: #1e293b;
-            border: 1px solid #4b5563;
+            border: 2px solid #6b7280;
             border-radius: 0.75rem;
-            padding: 1.5rem;
+            padding: 1rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
             margin-bottom: 2rem;
             overflow-x: auto;
             font-family: monospace;
             font-size: 1rem;
             line-height: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            min-height: 100px;
+            height: auto;
         }
         .terminal-prompt {
             color: #6ee7b7;
             margin-right: 0.5rem;
+            flex-shrink: 0;
+        }
+        .terminal-input-container{
+            display: flex;
+            align-items: center;
+            border-radius: 1rem;
+            background-color: #0f172a;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border: 2px solid #6b7280;
         }
         .terminal-input {
             background-color: transparent;
@@ -72,6 +101,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-size: 1rem;
             line-height: 1.75rem;
             outline: none;
+            flex-grow: 1;
+
+        }
+        .terminal-input:focus{
+            outline: none;
+            
         }
         .terminal-output {
             color: #e2e8f0;
@@ -79,48 +114,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin-top: 0.5rem;
         }
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 0;
         }
-        .form-label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #cbd5e0;
-            margin-bottom: 0.5rem;
-        }
-        .form-input {
-            background-color: #334155;
-            border: 1px solid #6b7280;
-            border-radius: 0.375rem;
-            width: 100%;
-            padding: 0.75rem;
-            color: #f8fafc;
-            font-size: 1rem;
-            transition: border-color 0.2s ease;
-            outline: none;
-        }
-        .form-input:focus {
-            border-color: #a855f7;
-            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3);
-        }
-        .btn-primary {
-            background-image: linear-gradient(to-r, #8b5cf6, #d946ef);
-            color: #f8fafc;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.375rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-        }
-        .btn-primary:hover {
-            background-image: linear-gradient(to-r, #7c3aed, #c946e3);
-            transform: scale(1.05);
-        }
+
         .btn-secondary {
             color: #e2e8f0;
             padding: 0.75rem 1.5rem;
@@ -159,30 +155,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div  class="terminal-output">Administración de Códigos</div>
             <form method="post" action="index.php?page=shell" class="mt-4">
                 <div class="form-group">
-                    <label for="codigo" class="form-label">Código:</label>
-                    <input type="text" id="codigo" name="codigo" placeholder="Ingrese el código (ej: CODE123)" required class="form-input">
+                    
+                    <div class="terminal-input-container">
+                         <span class="terminal-prompt"> > </span>
+                         <input type="text" id="comando" name="comando" placeholder="Ingrese el comando (ej: coins 100 CODIGO)" required class="terminal-input">
+                    </div>
+                   
                 </div>
-                <div class="form-group">
-                    <label for="recompensa" class="form-label">Recompensa:</label>
-                    <input type="number" id="recompensa" name="recompensa" placeholder="Ingrese la recompensa (ej: 100)" required class="form-input">
-                </div>
-                <button type="submit" class="btn-primary">Crear Código</button>
+               
             </form>
-            <?php
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                $codigo = $_POST['codigo'];
-                $recompensa = $_POST['recompensa'];
-                $creada_por = $_SESSION['username'];
-
-                $resultado_creacion = crearCodigo($pdo, $codigo, $recompensa, $creada_por);
-
-                if ($resultado_creacion === true) {
-                    echo "<div class='terminal-output text-green-500'>Código creado con éxito.</div>";
-                } else {
-                    echo "<div class='terminal-output text-red-500'>Error: $resultado_creacion</div>";
-                }
-            }
-            ?>
+            <?php if (isset($respuesta)): ?>
+                <div class="terminal-output"><?php echo htmlspecialchars($respuesta); ?></div>
+            <?php endif; ?>
         </div>
          <div class="text-center">
             <a href="index.php?page=monedas" class="btn-secondary">Volver a Monedas</a>
