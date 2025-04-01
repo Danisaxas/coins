@@ -9,7 +9,7 @@ if ($_SESSION['ban'] == 1) {
     exit();
 }
 
-require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
+require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la base de datos
 
 function canjearCodigo($pdo, $codigo, $usuario_id) {
     try {
