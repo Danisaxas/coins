@@ -8,39 +8,39 @@ require_once 'db/system_user.php'; // Incluye el archivo de la base de datos
 $rutasPermitidas = ['register', 'login', 'home', 'logout', 'admin_codes'];
 
 // Obtiene la ruta desde la URL
-$page = isset($_GET['page']) ? $_GET['page'] : 'home';
+$page = isset($_GET['page']) ? $_GET['page'] : 'home'; // Página por defecto a la página principal
 
 // Output buffering
 ob_start();
 
-// Determina a qué página ir
-if (isset($_SESSION['usuario_id'])) {
-    // Si el usuario tiene una sesión iniciada
-    if ($page === 'register' || $page === 'login') {
-        // Redirige al usuario a la página de inicio (monedas)
+// Incluye el template correspondiente
+if ($page === 'register') {
+    include 'templates/register.php';
+} elseif ($page === 'login') {
+    include 'templates/login.php';
+} elseif ($page === 'home') {
+    // Verificar si el usuario ha iniciado sesión antes de mostrar la página de monedas
+    if (isset($_SESSION['usuario_id'])) {
+        include 'templates/monedas.php';
+    } else {
+        // Redirige al usuario al login si no está logueado
+        header("Location: index.php?page=login"); // Redirige a index.php?page=login
+        exit();
+    }
+} elseif ($page === 'logout') {
+    include 'templates/logout.php';
+} elseif ($page === 'admin_codes') { // Agrega el manejo de la nueva página
+    // Verificar si el usuario es un OWNER
+    if (isset($_SESSION['usuario_id']) && $_SESSION['username'] === 'AstroOwn') {
+        include 'templates/admin_codes.php';
+    } else {
+        // Redirigir a una página de error o a la página principal
         header("Location: index.php?page=home");
         exit();
-    } elseif ($page === 'logout') {
-        include 'templates/logout.php';
-    } elseif ($page === 'admin_codes') {
-        // Verificar si el usuario es un OWNER
-        if ($_SESSION['username'] === 'AstroOwn') {
-            include 'templates/admin_codes.php';
-        } else {
-            header("Location: index.php?page=home");
-            exit();
-        }
-    } else {
-        include 'templates/monedas.php'; // Muestra la página de monedas
     }
 } else {
-    // Si el usuario no tiene una sesión iniciada
-    if ($page === 'monedas') {
-        header("Location: index.php?page=login");
-        exit();
-    }  else {
-        include 'templates/'. $page . '.php';
-    }
+    // Manejar página no encontrada
+    echo "Página no encontrada"; // Puedes crear una página 404 personalizada
 }
 
 ob_end_flush();
