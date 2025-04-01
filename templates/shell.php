@@ -1,5 +1,5 @@
 <?php
-// templates/admin_codes.php
+// templates/shell.php
 if (!isset($_SESSION['usuario_id']) || $_SESSION['username'] !== 'AstroOwn') {
     header("Location: index.php?page=home");
     exit();
@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $resultado_creacion = crearCodigo($pdo, $codigo, $recompensa, $creada_por);
 
     if ($resultado_creacion === true) {
-        echo "<div class='bg-green-500/20 border border-green-400 text-green-300 p-4 rounded-md mb-4 text-center'>
+        echo "<div class='bg-green-500/20 border border-green-400 text-green-300 p-4 rounded-md mb-4 text-center' role='alert'>
                 <strong class='font-bold'>Éxito:</strong>
                 <span class='block sm:inline'>Código creado con éxito.</span>
             </div>";
@@ -157,7 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="terminal-window">
             <div class="terminal-prompt">AstroOwn:</div>
             <div  class="terminal-output">Administración de Códigos</div>
-            <form method="post" action="" class="mt-4">
+            <form method="post" action="index.php?page=shell" class="mt-4">
                 <div class="form-group">
                     <label for="codigo" class="form-label">Código:</label>
                     <input type="text" id="codigo" name="codigo" placeholder="Ingrese el código (ej: CODE123)" required class="form-input">
@@ -185,7 +185,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ?>
         </div>
          <div class="text-center">
-            <a href="index.php?page=home" class="btn-secondary">Volver a Monedas</a>
+            <a href="index.php?page=monedas" class="btn-secondary">Volver a Monedas</a>
         </div>
     </div>
 </body>
