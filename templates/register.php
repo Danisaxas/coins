@@ -1,6 +1,6 @@
 <?php
 // templates/register.php
-require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la base de datos
+require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -16,9 +16,9 @@ require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la ba
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen bg-black">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Registro</h2>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen">
+    <div class="bg-white/5 p-8 rounded-xl shadow-lg backdrop-blur-md w-full max-w-md">
+        <h2 class="text-3xl font-semibold text-white mb-6 text-center">Regístrate</h2>
         <?php
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $username = $_POST['username'];
@@ -28,57 +28,62 @@ require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la ba
 
             // Validaciones del lado del servidor
             if (strlen($username) < 6 || strlen($username) > 16 || !preg_match('/^[a-zA-Z0-9]+$/', $username)) {
-                echo "<p class='text-red-500 text-sm mt-2'>El nombre de usuario debe tener entre 6 y 16 caracteres y contener solo letras y números.</p>";
+                echo "<div class='bg-red-500/20 border border-red-400 text-red-300 p-4 rounded-md mb-4' role='alert'>
+                        <strong class='font-bold'>Error:</strong>
+                        <span class='block sm:inline'>El nombre de usuario debe tener entre 6 y 16 caracteres y contener solo letras y números.</span>
+                    </div>";
             } else if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-                echo "<p class='text-red-500 text-sm mt-2'>El correo electrónico no es válido.</p>";
+                echo "<div class='bg-red-500/20 border border-red-400 text-red-300 p-4 rounded-md mb-4' role='alert'>
+                        <strong class='font-bold'>Error:</strong>
+                        <span class='block sm:inline'>El correo electrónico no es válido.</span>
+                    </div>";
             } else if (strlen($contrasena) < 6 || !preg_match('/^[A-Z]/', $contrasena) || !preg_match('/\d/', $contrasena) || !preg_match('/[^a-zA-Z\d]/', $contrasena)) {
-                echo "<p class='text-red-500 text-sm mt-2'>La contraseña debe tener al menos 6 caracteres, comenzar con una letra mayúscula, contener números y signos.</p>";
+                echo "<div class='bg-red-500/20 border border-red-400 text-red-300 p-4 rounded-md mb-4' role='alert'>
+                        <strong class='font-bold'>Error:</strong>
+                        <span class='block sm:inline'>La contraseña debe tener al menos 6 caracteres, comenzar con una letra mayúscula, contener números y signos.</span>
+                    </div>";
             } else if ($contrasena != $confirmar_contrasena) {
-                echo "<p class='text-red-500 text-sm mt-2'>Las contraseñas no coinciden.</p>";
+                echo "<div class='bg-red-500/20 border border-red-400 text-red-300 p-4 rounded-md mb-4' role='alert'>
+                        <strong class='font-bold'>Error:</strong>
+                        <span class='block sm:inline'>Las contraseñas no coinciden.</span>
+                    </div>";
             } else {
                 // Si todas las validaciones pasan, intenta registrar al usuario
                 $resultado_registro = registrarUsuario($pdo, $username, $correo, $contrasena);
                 if ($resultado_registro === true) {
-                    echo "<p class='text-green-500 text-sm mt-2'>Registro exitoso. Ahora puedes iniciar sesión.</p>";
-                    // Iniciar sesión automáticamente después del registro
-                    $user = iniciarSesion($pdo, $username, $contrasena);
-                    if ($user) {
-                        session_start();
-                        $_SESSION['usuario_id'] = $user['id'];
-                        $_SESSION['username'] = $user['username'];
-                        $_SESSION['monedas'] = $user['monedas'];
-                        $_SESSION['ban'] = $user['ban'];
-                        header("Location: index.php?page=monedas");
-                        exit();
-                    }
-
+                    echo "<div class='bg-green-500/20 border border-green-400 text-green-300 p-4 rounded-md mb-4' role='alert'>
+                            <strong class='font-bold'>Éxito:</strong>
+                            <span class='block sm:inline'>Registro exitoso. Ahora puedes iniciar sesión.</span>
+                        </div>";
+                    header("Location: index.php?page=login"); // Redirige al usuario a la página de inicio de sesión
+                    exit();
                 } else {
                     echo "<p class='text-red-500 text-sm mt-2'>$resultado_registro</p>"; // Muestra el mensaje de error devuelto por la función
                 }
             }
         }
         ?>
-        <form method="post" action="index.php?page=register">
-            <div class="mb-4">
-                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Nombre de Usuario:</label>
-                <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <form method="post" action="index.php?page=register" class="space-y-6">
+            <div>
+                <label for="username" class="block text-gray-300 text-sm font-bold mb-2">Nombre de Usuario:</label>
+                <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required class="shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
             </div>
-            <div class="mb-4">
-                <label for="correo" class="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico:</label>
-                <input type="email" id="correo" name="correo" placeholder="Ingrese su correo electrónico" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <div>
+                <label for="correo" class="block text-gray-300 text-sm font-bold mb-2">Correo Electrónico:</label>
+                <input type="email" id="correo" name="correo" placeholder="Ingrese su correo electrónico" required class="shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
             </div>
-            <div class="mb-4">
-                <label for="contrasena" class="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
-                <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <div>
+                <label for="contrasena" class="block text-gray-300 text-sm font-bold mb-2">Contraseña:</label>
+                <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
             </div>
-            <div class="mb-6">
-                <label for="confirmar_contrasena" class="block text-gray-700 text-sm font-bold mb-2">Confirmar Contraseña:</label>
-                <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" placeholder="Confirme su contraseña" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <div>
+                <label for="confirmar_contrasena" class="block text-gray-300 text-sm font-bold mb-2">Confirmar Contraseña:</label>
+                <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" placeholder="Confirme su contraseña" required class="shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
             </div>
-            <button type="submit" class="bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Registrarse</button>
+            <button type="submit" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline w-full transition duration-300 ease-in-out hover:scale-105">Registrarse</button>
         </form>
-        <div class="mt-4 text-center">
-            <p class="text-gray-600 text-sm">¿Ya tienes una cuenta? <a href="index.php?page=login" class="text-blue-500 hover:text-blue-700 font-semibold">Inicia sesión</a></p>
+        <div class="mt-6 text-center">
+            <p class="text-gray-400 text-sm">¿Ya tienes una cuenta? <a href="index.php?page=login" class="text-blue-400 hover:text-blue-300 font-semibold transition duration-200 ease-in-out">Inicia sesión</a></p>
         </div>
     </div>
 </body>
