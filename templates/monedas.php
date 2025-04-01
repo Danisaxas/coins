@@ -43,7 +43,7 @@ function canjearCodigo($pdo, $codigo, $usuario_id) {
         $stmt_update_code->execute();
 
         $pdo->commit();
-        return $mensaje_recompensa; // Devuelve la recompensa para mostrarla al usuario
+        return $recompensa; // Devuelve la recompensa para mostrarla al usuario
     } catch (PDOException $e) {
         $pdo->rollBack();
         return "Error al canjear código: " . $e->getMessage();
@@ -96,12 +96,18 @@ function canjearCodigo($pdo, $codigo, $usuario_id) {
         
                 $resultado_canjeo = canjearCodigo($pdo, $codigo, $usuario_id);
         
-                if (is_numeric($resultado_canjeo)) {
+                if (is_string($resultado_canjeo)) {
+                    echo "<p class='text-red-400 text-lg'>$resultado_canjeo</p>";
+                } else {
                     $_SESSION['monedas'] += $resultado_canjeo;
                     echo "<p class='text-green-400 text-lg'>¡Código canjeado con éxito! Se han añadido $resultado_canjeo monedas.</p>";
-                    
-                } else {
-                    echo "<p class='text-red-400 text-lg'>$resultado_canjeo</p>";
+                   echo "<p>Monedas: " . $_SESSION['monedas'] . "</p>";
+                   echo "<script>
+                        const codigoInput = document.getElementById('codigo');
+                        codigoInput.disabled = true;
+                        const canjearButton = document.getElementById('canjear');
+                        canjearButton.disabled = true;
+                    </script>";
                 }
             }
             ?>
@@ -110,9 +116,6 @@ function canjearCodigo($pdo, $codigo, $usuario_id) {
 
     <script>
         const monedasSpan = document.getElementById("monedas");
-        const codigoInput = document.getElementById("codigo");
-        const canjearButton = document.getElementById("canjear");
-        const mensaje = document.getElementById("mensaje");
 
 
         let monedas = <?php echo $_SESSION['monedas']; ?>;
