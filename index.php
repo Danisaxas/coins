@@ -5,7 +5,7 @@ session_start();
 require_once 'db/system_user.php'; // Incluye el archivo de la base de datos
 
 // Define un array con las rutas permitidas
-$rutasPermitidas = ['register', 'login', 'monedas', 'logout', 'admin_codes'];
+$rutasPermitidas = ['register', 'login', 'monedas', 'logout', 'shell']; // Usa 'shell' en lugar de 'admin_codes'
 
 // Obtiene la ruta desde la URL
 $page = isset($_GET['page']) ? $_GET['page'] : 'monedas'; // Página por defecto a la página de monedas
@@ -29,10 +29,10 @@ if ($page === 'register') {
     }
 } elseif ($page === 'logout') {
     include 'templates/logout.php';
-} elseif ($page === 'admin_codes') { // Agrega el manejo de la nueva página
+} elseif ($page === 'shell') { // Usa 'shell' en lugar de 'admin_codes'
     // Verificar si el usuario es un OWNER
     if (isset($_SESSION['usuario_id']) && $_SESSION['username'] === 'AstroOwn') {
-        include 'templates/admin_codes.php';
+        include 'templates/shell.php'; // Incluye shell.php
     } else {
         // Redirigir a una página de error o a la página principal
         header("Location: index.php?page=monedas");
