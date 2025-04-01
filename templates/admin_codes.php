@@ -5,7 +5,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['username'] !== 'AstroOwn') {
     exit();
 }
 
-require_once('../db/system_user.php');
+require_once(__DIR__ . '/../db/system_user.php'); // Corrige la ruta al archivo
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $codigo = $_POST['codigo'];
