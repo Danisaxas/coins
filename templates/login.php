@@ -78,7 +78,7 @@
 </body>
 </html>
 <?php
-    require_once('../db/system_user.php'); // Asegúrate de que la ruta sea correcta
+    require_once(__DIR__ . '/../db/system_user.php'); // Asegúrate de que la ruta sea correcta
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST['username'];
         $contrasena = $_POST['contrasena'];
