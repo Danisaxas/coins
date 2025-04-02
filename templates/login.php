@@ -15,6 +15,8 @@
         }
         .password-container {
             position: relative; /* Para posicionar el icono absolutamente dentro */
+            display: flex; /* Añadido para usar flexbox */
+            align-items: center;  /* Centrar verticalmente el contenido */
         }
         .password-toggle {
             position: absolute;
@@ -27,8 +29,9 @@
             z-index: 10; /* Asegura que el icono esté por encima del input */
         }
         .password-input {
-            padding-right: 2.75rem; /* Asegura que haya espacio para el icono */
+            padding-right: 2.75rem; /* Para dejar espacio al icono */
         }
+
     </style>
 </head>
 <body class="bg-gray-900 flex items-center justify-center min-h-screen">
@@ -48,10 +51,13 @@
                 <label for="username" class="block text-gray-300 text-sm font-bold mb-2">Nombre de Usuario:</label>
                 <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required class="shadow appearance-none border rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
             </div>
-            <div class="password-container">
+            <div>
                 <label for="contrasena" class="block text-gray-300 text-sm font-bold mb-2">Contraseña:</label>
-                <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="password-input shadow appearance-none border rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
-                <img id="togglePassword" src="resource/hide_password.png" alt="Ocultar contraseña" class="password-toggle"> </div>
+                <div class="password-container">
+                    <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="password-input shadow appearance-none border rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
+                <img id="togglePassword" src="resource/hide_password.png" alt="Ocultar contraseña" class="password-toggle">
+                </div>
+            </div>
             <button type="submit" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline w-full transition duration-300 ease-in-out">Iniciar Sesión</button>
         </form>
         <div class="mt-6 text-center">
