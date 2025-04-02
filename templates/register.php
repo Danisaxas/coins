@@ -39,8 +39,8 @@ require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la ba
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-900 to-white flex items-center justify-center min-h-screen">
-    <div class="bg-white/5 p-8 rounded-xl shadow-lg backdrop-blur-md w-full max-w-md border border-white/10">
+<body class="bg-gray-900 flex items-center justify-center min-h-screen">
+    <div class="bg-black/20 p-8 rounded-xl shadow-lg backdrop-blur-md w-full max-w-md border border-white/10">
         <h2 class="text-3xl font-semibold text-white mb-6 text-center">Regístrate</h2>
         <?php
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -50,7 +50,7 @@ require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la ba
             $confirmar_contrasena = $_POST['confirmar_contrasena'];
 
             // Validaciones del lado del servidor
-             if (strlen($username) < 6 || strlen($username) > 16 || !preg_match('/^[a-zA-Z0-9]+$/', $username)) {
+            if (strlen($username) < 6 || strlen($username) > 16 || !preg_match('/^[a-zA-Z0-9]+$/', $username)) {
                 echo "<div class='bg-red-500/20 border border-red-400 text-red-300 p-4 rounded-md mb-4' role='alert'>
                         <strong class='font-bold'>Error:</strong>
                         <span class='block sm:inline'>El nombre de usuario debe tener entre 6 y 16 caracteres y contener solo letras y números.</span>
@@ -95,12 +95,10 @@ require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la ba
                 <label for="correo" class="block text-gray-300 text-sm font-bold mb-2">Correo Electrónico:</label>
                 <input type="email" id="correo" name="correo" placeholder="Ingrese su correo electrónico" required class="shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
             </div>
-            <div>
-                <label for="contrasena" class="block text-gray-300 text-sm font-bold mb-2">Contraseña:</label>
-                <div class="password-container">
-                      <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="password-input shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
+            <div class="password-container">
+                 <label for="contrasena" class="block text-gray-300 text-sm font-bold mb-2">Contraseña:</label>
+                <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="password-input shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
                 <img id="togglePassword" src="resource/hide_password.png" alt="Ocultar contraseña" class="password-toggle">
-                </div>
             </div>
             <div>
                 <label for="confirmar_contrasena" class="block text-gray-300 text-sm font-bold mb-2">Confirmar Contraseña:</label>
