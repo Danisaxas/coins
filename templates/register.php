@@ -1,6 +1,6 @@
 <?php
 // templates/register.php
-require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
+require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la base de datos
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -39,7 +39,7 @@ require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-900 to-white flex items-center justify-center min-h-screen">
+<body class="bg-gray-900 flex items-center justify-center min-h-screen">
     <div class="bg-white/5 p-8 rounded-xl shadow-lg backdrop-blur-md w-full max-w-md border border-white/10">
         <h2 class="text-3xl font-semibold text-white mb-6 text-center">Regístrate</h2>
         <?php
@@ -74,7 +74,7 @@ require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
                 // Si todas las validaciones pasan, intenta registrar al usuario
                 $resultado_registro = registrarUsuario($pdo, $username, $correo, $contrasena);
                 if ($resultado_registro === true) {
-                    echo "<p class='text-green-500/20 border border-green-400 text-green-300 p-4 rounded-md mb-4' role='alert'>
+                    echo "<div class='bg-green-500/20 border border-green-400 text-green-300 p-4 rounded-md mb-4' role='alert'>
                             <strong class='font-bold'>Éxito:</strong>
                             <span class='block sm:inline'>Registro exitoso. Ahora puedes iniciar sesión.</span>
                         </div>";
@@ -96,7 +96,7 @@ require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
                 <input type="email" id="correo" name="correo" placeholder="Ingrese su correo electrónico" required class="shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
             </div>
             <div class="password-container">
-                 <label for="contrasena" class="block text-gray-300 text-sm font-bold mb-2">Contraseña:</label>
+                <label for="contrasena" class="block text-gray-300 text-sm font-bold mb-2">Contraseña:</label>
                 <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="password-input shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
                  <img id="togglePassword" src="resource/hide_password.png" alt="Ocultar contraseña" class="password-toggle">
             </div>
