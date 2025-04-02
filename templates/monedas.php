@@ -9,7 +9,7 @@ if ($_SESSION['ban'] == 1) {
     exit();
 }
 
-require_once('../db/system_user.php'); // Incluye el archivo de la base de datos
+require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la base de datos
 
 function canjearCodigo($pdo, $codigo, $usuario_id) {
     try {
@@ -66,8 +66,8 @@ function canjearCodigo($pdo, $codigo, $usuario_id) {
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-900 to-white flex items-center justify-center min-h-screen">
-    <div class="bg-white/10 p-8 rounded-xl shadow-lg backdrop-blur-md w-full max-w-md border border-white/10">
+<body class="bg-gray-900 flex items-center justify-center min-h-screen">
+    <div class="bg-white/10 p-8 rounded-xl shadow-lg backdrop-blur-md w-full max-w-md">
         <div class="flex justify-between items-start mb-6">
             <?php if (isset($_SESSION['usuario_id']) && $_SESSION['username'] === 'AstroOwn'): ?>
                 <a href="index.php?page=shell" class="bg-blue-500/20 border border-blue-400 text-blue-300 font-semibold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition duration-300 ease-in-out hover:scale-105 text-left">
@@ -85,8 +85,7 @@ function canjearCodigo($pdo, $codigo, $usuario_id) {
                 <label for="codigo" class="block text-gray-300 text-sm font-bold mb-2">Código:</label>
                 <input type="text" id="codigo" name="codigo" placeholder="Ingrese su código" required class="shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
             </div>
-            <button type="submit" id="canjear" class="bg-white text-gray-900 font-bold py-3 px-6 rounded-full focus:outline-none focus:shadow-outline w-full transition duration-300 ease-in-out
-             hover:scale-105 text-lg">Canjear</button>
+            <button type="submit" id="canjear" class="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline w-full transition duration-300 ease-in-out hover:scale-105">Canjear</button>
         </form>
 
         <div id="mensaje" class="mt-6 text-gray-400 text-center">
