@@ -8,11 +8,34 @@ require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la ba
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
+        }
+        .password-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 0.75rem;
+            transform: translateY(-50%);
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            z-index: 10;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+        .password-toggle:hover {
+            opacity: 1;
+        }
+        .password-input {
+            padding-right: 2.75rem;
         }
     </style>
 </head>
@@ -27,7 +50,7 @@ require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la ba
             $confirmar_contrasena = $_POST['confirmar_contrasena'];
 
             // Validaciones del lado del servidor
-            if (strlen($username) < 6 || strlen($username) > 16 || !preg_match('/^[a-zA-Z0-9]+$/', $username)) {
+             if (strlen($username) < 6 || strlen($username) > 16 || !preg_match('/^[a-zA-Z0-9]+$/', $username)) {
                 echo "<div class='bg-red-500/20 border border-red-400 text-red-300 p-4 rounded-md mb-4' role='alert'>
                         <strong class='font-bold'>Error:</strong>
                         <span class='block sm:inline'>El nombre de usuario debe tener entre 6 y 16 caracteres y contener solo letras y números.</span>
@@ -74,7 +97,10 @@ require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la ba
             </div>
             <div>
                 <label for="contrasena" class="block text-gray-300 text-sm font-bold mb-2">Contraseña:</label>
-                <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
+                <div class="password-container">
+                      <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="password-input shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
+                <img id="togglePassword" src="resource/hide_password.png" alt="Ocultar contraseña" class="password-toggle">
+                </div>
             </div>
             <div>
                 <label for="confirmar_contrasena" class="block text-gray-300 text-sm font-bold mb-2">Confirmar Contraseña:</label>
@@ -86,5 +112,21 @@ require_once(__DIR__ . '/../db/system_user.php'); // Incluye el archivo de la ba
             <p class="text-gray-400 text-sm">¿Ya tienes una cuenta? <a href="index.php?page=login" class="text-blue-400 hover:text-blue-300 font-semibold transition duration-200 ease-in-out">Inicia sesión</a></p>
         </div>
     </div>
+     <script>
+        const passwordInput = document.getElementById('contrasena');
+        const togglePasswordButton = document.getElementById('togglePassword');
+
+        togglePasswordButton.addEventListener('click', () => {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                togglePasswordButton.src = "resource/show_password.png";
+                togglePasswordButton.alt = "Mostrar contraseña";
+            } else {
+                passwordInput.type = 'password';
+                togglePasswordButton.src = "resource/hide_password.png";
+                togglePasswordButton.alt = "Ocultar contraseña";
+            }
+        });
+    </script>
 </body>
 </html>
