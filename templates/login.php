@@ -14,22 +14,20 @@
             font-family: 'Inter', sans-serif;
         }
         .password-container {
-            position: relative;
-            display: flex;
-            align-items: center;
+            position: relative; /* Para posicionar el icono absolutamente dentro */
         }
         .password-toggle {
             position: absolute;
             top: 50%;
-            right: 0.75rem;
+            right: 0.75rem; /* Lo coloca al final del padding del input */
             transform: translateY(-50%);
             cursor: pointer;
-            width: 24px;
+            width: 24px; /* Ajusta el tamaño del icono según sea necesario */
             height: 24px;
-            z-index: 10;
+            z-index: 10; /* Asegura que el icono esté por encima del input */
         }
         .password-input {
-            padding-right: 2.75rem;
+            padding-right: 2.75rem; /* Asegura que haya espacio para el icono */
         }
     </style>
 </head>
@@ -42,22 +40,21 @@
                 <strong class='font-bold'>Error:</strong>
                 <span class='block sm:inline'>".$_SESSION['login_error']."</span>
             </div>";
-            unset($_SESSION['login_error']);
+            unset($_SESSION['login_error']); // Limpia el error después de mostrarlo
         }
         ?>
-        <form method="post" action="index.php?page=login" class="space-y-6">
+        <form method="post" action="index.php?page=login" class="space-y-4">
             <div>
                 <label for="username" class="block text-gray-300 text-sm font-bold mb-2">Nombre de Usuario:</label>
-                <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required class="shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
+                <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required class="shadow appearance-none border rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
             </div>
             <div class="password-container">
                 <label for="contrasena" class="block text-gray-300 text-sm font-bold mb-2">Contraseña:</label>
-                <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="password-input shadow appearance-none border border-white/20 rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
-                <img id="togglePassword" src="resource/hide_password.png" alt="Ocultar contraseña" class="password-toggle">
-            </div>
+                <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required class="password-input shadow appearance-none border rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-white/50 placeholder:text-gray-500">
+                <img id="togglePassword" src="resource/hide_password.png" alt="Ocultar contraseña" class="password-toggle"> </div>
             <button type="submit" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline w-full transition duration-300 ease-in-out">Iniciar Sesión</button>
         </form>
-        <div class="mt-8 text-center">
+        <div class="mt-6 text-center">
             <p class="text-gray-400 text-sm">¿No tienes una cuenta? <a href="index.php?page=register" class="text-blue-400 hover:text-blue-300 font-semibold transition duration-200 ease-in-out">Regístrate</a></p>
         </div>
         <div class="mt-6 text-center">
