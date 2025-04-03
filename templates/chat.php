@@ -105,6 +105,7 @@
             flex-direction: column;
             border-left: 1px solid #4b5563;
             background-color: #0f172a;
+            display: none; /* Oculta la ventana de chat por defecto */
         }
         .chat-header {
             background-color: #1e293b;
@@ -326,6 +327,7 @@
                 messageList.innerHTML = '';
                 messageInput.value = '';
                 messageInputBottom.placeholder = `Escribe tu mensaje a ${selectedUser.name}...`;
+                destinatarioSpan.textContent = selectedUser.name;
 
                  fetch(`messages.php?receiver_id=${selectedUserId}`)
                 .then(response => response.json())
@@ -361,43 +363,6 @@
                 messageItem.textContent = messageText;
                 messageList.appendChild(messageItem);
                 messageInput.value = '';
-                // Aquí deberías enviar el mensaje al servidor (usando fetch o WebSockets)
-               fetch('send_message.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `receiver_id=${selectedUserId}&message=${encodeURIComponent(messageText)}`,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.status === 'success'){
-                         const replyItem = document.createElement('div');
-                        replyItem.classList.add('message-item', 'other');
-                        replyItem.textContent = data.message;
-                        messageList.appendChild(replyItem);
-                    }
-                    else{
-                         alert('error al enviar mensaje')
-                    }
-
-                   
-                })
-                .catch(error => {
-                    console.error('Error al enviar el mensaje:', error);
-                    alert('error al enviar el mensaje')
-                });
-            }
-        });
-
-        sendButtonBottom.addEventListener('click', () => {
-            const messageText = messageInputBottom.value.trim();
-            if (messageText !== '' && selectedUserId) {
-                const messageItem = document.createElement('div');
-                messageItem.classList.add('message-item');
-                messageItem.textContent = messageText;
-                messageList.appendChild(messageItem);
-                messageInputBottom.value = '';
                 // Aquí deberías enviar el mensaje al servidor (usando fetch o WebSockets)
                fetch('send_message.php', {
                     method: 'POST',
