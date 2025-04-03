@@ -13,59 +13,90 @@
         /* Estilos personalizados para la interfaz de chat */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* Fondo gris claro */
+            background-color: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.75;
         }
         .chat-container {
             display: flex;
-            height: 100vh; /* Altura completa de la ventana */
+            height: 100vh;
+            background-color: #f8fafc;
         }
+
         .sidebar {
             width: 300px;
-            background-color: #f0f0f0; /* Fondo blanco */
-            border-right: 1px solid #e0e0e0; /* Borde inferior gris */
+            background-color: #1e293b;
+            border-right: 1px solid #4b5563;
             display: flex;
             flex-direction: column;
         }
+
+        .sidebar-header{
+            padding: 1rem;
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 1px solid #4b5563;
+        }
+
         .search-container {
             padding: 0.75rem;
-            border-bottom: 1px solid #e0e0e0; /* Borde inferior gris */
+            border-bottom: 1px solid #4b5563;
+            display: flex;
+             align-items: center;
         }
+
         .search-input {
-            border-radius: 0.5rem; /* Bordes redondeados */
-            padding: 0.75rem 1rem; /* Relleno */
-            width: 100%; /* Ancho completo */
-            border: 1px solid #d1d5db; /* Borde gris */
-            outline: none; /* Sin contorno por defecto */
-            transition: border-color 0.2s ease-in-out; /* Transición suave del borde */
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            border: 1px solid #6b7280;
+            outline: none;
+            transition: border-color 0.2s ease-in-out;
+            margin-right: 0.5rem;
+            background-color: #334155;
+            color: #f8fafc;
         }
+
         .search-input:focus {
-            border-color: #3b82f6; /* Borde azul al enfocar */
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Sombra azul al enfocar */
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
+        .search-icon{
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
         .user-list {
-            flex-grow: 1; /* El contenido principal ocupa el espacio restante */
-            overflow-y: auto; /* Scroll vertical si es necesario */
+            flex-grow: 1;
+            overflow-y: auto;
             padding: 0.5rem;
         }
+
         .user-item {
             display: flex;
             align-items: center;
             padding: 0.75rem;
-            border-bottom: 1px solid #e5e7eb; /* Separador entre usuarios */
-            cursor: pointer; /* Cursor de puntero al pasar el mouse */
-            transition: background-color 0.2s ease-in-out; /* Transición suave del fondo */
+            border-bottom: 1px solid #4b5563;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
             border-radius: 0.5rem;
             margin-bottom: 0.25rem;
         }
+
         .user-item:hover {
-            background-color: #f0f0f0; /* Fondo gris claro al pasar el mouse */
+            background-color: #334155;
         }
+
         .user-avatar {
-            width: 2.5rem; /* Tamaño del avatar */
+            width: 2.5rem;
             height: 2.5rem;
-            border-radius: 50%; /* Hace que el avatar sea un círculo */
-            margin-right: 1rem; /* Espacio entre el avatar y el nombre */
-            background-color: #9ca3af; /* Color de fondo gris para el avatar */
+            border-radius: 50%;
+            margin-right: 1rem;
+            background-color: #9ca3af;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -76,21 +107,25 @@
             background-size: cover;
             background-position: center;
         }
+
         .chat-window {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            border-left: 1px solid #e0e0e0;
+            border-left: 1px solid #4b5563;
         }
+
         .chat-header {
-            background-color: #ffffff;
+            background-color: #1e293b;
             padding: 0.75rem;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid #4b5563;
             text-align: left;
             font-weight: 600;
             font-size: 1.25rem;
             border-radius: 0.5rem 0.5rem 0 0;
+            color: #fff;
         }
+
         .message-list {
             flex-grow: 1;
             overflow-y: auto;
@@ -108,6 +143,8 @@
             max-width: 70%;
             text-align: right;
              box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            color: #000;
+
         }
 
         .message-item.other {
@@ -116,12 +153,13 @@
             margin-right: auto;
             text-align: left;
              box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+             color: #000;
         }
 
         .message-input-container {
             padding: 0.75rem;
-            background-color: #ffffff;
-            border-top: 1px solid #e5e7eb;
+            background-color: #1e293b;
+            border-top: 1px solid #4b5563;
             display: flex;
             align-items: center;
             border-radius: 0 0 0.5rem 0.5rem;
@@ -135,11 +173,13 @@
             border-radius: 0.5rem;
             padding: 0.75rem 1rem;
             width: 100%;
-            border: 1px solid #d1d5db;
+            border: 1px solid #6b7280;
             outline: none;
             transition: border-color 0.2s ease-in-out;
             margin-right: 1rem;
             font-size: 1rem;
+            color: #f8fafc;
+            background-color: #334155;
         }
 
         .message-input:focus {
@@ -200,11 +240,15 @@
 
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-900">
     <div class="chat-container">
         <div class="sidebar">
+            <div class="sidebar-header">
+               Astro Messenger
+            </div>
             <div class="search-container">
                 <input type="text" id="user-search" placeholder="Buscar usuario..." class="search-input">
+                 <img src="resource/telegram$1.png" alt="Telegram" class="search-icon">
             </div>
             <div id="user-list" class="user-list">
                 </div>
