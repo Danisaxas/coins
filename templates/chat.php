@@ -105,7 +105,6 @@
             flex-direction: column;
             border-left: 1px solid #4b5563;
             background-color: #0f172a;
-            display: none; /* Oculta la ventana de chat por defecto */
         }
         .chat-header {
             background-color: #1e293b;
@@ -123,6 +122,7 @@
             padding: 1rem;
             display: flex;
             flex-direction: column;
+            height: calc(100vh - 12rem); /* Ajuste de altura */
 
         }
         .message-item {
@@ -269,8 +269,6 @@
         const messageList = document.getElementById('message-list');
         const messageInput = document.getElementById('message-input');
         const sendButton = document.getElementById('send-button');
-        const messageInputBottom = document.getElementById('message-input-bottom');
-        const sendButtonBottom = document.getElementById('send-button-bottom');
         const destinatarioSpan = document.getElementById('destinatario');
 
         //const users = [
@@ -288,7 +286,7 @@
         fetch('users.php')
         .then(response => response.json())
         .then(data => {
-            users = users.concat(data);
+            users = data;
              displayUsers(users);
         })
 
@@ -326,7 +324,6 @@
                 chatWindow.classList.remove('hidden');
                 messageList.innerHTML = '';
                 messageInput.value = '';
-                messageInputBottom.placeholder = `Escribe tu mensaje a ${selectedUser.name}...`;
                 destinatarioSpan.textContent = selectedUser.name;
 
                  fetch(`messages.php?receiver_id=${selectedUserId}`)
