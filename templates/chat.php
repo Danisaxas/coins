@@ -84,11 +84,11 @@
             background-color: #334155;
         }
         .user-avatar {
-             width: 2.5rem;
+            width: 2.5rem; /* Tamaño del avatar */
             height: 2.5rem;
-            border-radius: 50%;
-            margin-right: 1rem;
-            background-color: #9ca3af;
+            border-radius: 50%; /* Hace que el avatar sea un círculo */
+            margin-right: 1rem; /* Espacio entre el avatar y el nombre */
+            background-color: #9ca3af; /* Color de fondo gris para el avatar */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -240,6 +240,10 @@
                  <div class="search-icon"></div>
             </div>
             <div id="user-list" class="user-list">
+                <div class="user-item" data-user-id="<?php echo $_SESSION['usuario_id'] ?>">
+                    <div class="user-avatar"><?php echo substr($_SESSION['username'], 0, 2); ?></div>
+                    <span><?php echo $_SESSION['username']; ?> (Tú)</span>
+                </div>
                 </div>
         </div>
         <div id="chat-window" class="chat-window hidden">
@@ -271,13 +275,15 @@
         //    { id: 4, name: 'Usuario 4', avatar: 'U4' },
         //    { id: 5, name: 'Usuario 5', avatar: 'U5' },
         //];
-        let users = [];
-        let myId = <?php echo $_SESSION['usuario_id']?>;
+        let users = [
+            {id: <?php echo $_SESSION['usuario_id'] ?>, name: '<?php echo $_SESSION['username']?>', avatar: '<?php echo strtoupper(substr($_SESSION['username'], 0, 2)); ?>'}
+        ];
+        let selectedUserId = null;
 
         fetch('users.php')
         .then(response => response.json())
         .then(data => {
-            users = data;
+            users = users.concat(data);
              displayUsers(users);
         })
 
@@ -350,7 +356,6 @@
                 messageList.appendChild(messageItem);
                 messageInput.value = '';
                 // Aquí deberías enviar el mensaje al servidor (usando fetch o WebSockets)
-                // y recibir la respuesta para mostrarla en el chat
                fetch('send_message.php', {
                     method: 'POST',
                     headers: {
