@@ -13,24 +13,19 @@
         /* Estilos personalizados para la interfaz de chat */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
-            color: #e2e8f0;
-            line-height: 1.75;
+            background-color: #f3f4f6; /* Fondo gris claro */
         }
         .chat-container {
             display: flex;
-            height: 100vh;
-            background-color: #f8fafc;
+            height: 100vh; /* Altura completa de la ventana */
         }
-
         .sidebar {
             width: 300px;
-            background-color: #1e293b;
-            border-right: 1px solid #4b5563;
+            background-color: #1e293b; /* Fondo blanco */
+            border-right: 1px solid #4b5563; /* Borde inferior gris */
             display: flex;
             flex-direction: column;
         }
-
         .sidebar-header{
             padding: 1rem;
             color: #fff;
@@ -39,64 +34,60 @@
             text-align: center;
             border-bottom: 1px solid #4b5563;
         }
-
         .search-container {
             padding: 0.75rem;
             border-bottom: 1px solid #4b5563;
             display: flex;
-             align-items: center;
+            align-items: center;
         }
-
         .search-input {
-            border-radius: 0.5rem;
-            padding: 0.75rem 1rem;
-            width: 100%;
-            border: 1px solid #6b7280;
-            outline: none;
-            transition: border-color 0.2s ease-in-out;
-            margin-right: 0.5rem;
+            border-radius: 0.5rem; /* Bordes redondeados */
+            padding: 0.75rem 1rem; /* Relleno */
+            width: 100%; /* Ancho completo */
+            border: 1px solid #6b7280; /* Borde gris */
+            outline: none; /* Sin contorno por defecto */
+            transition: border-color 0.2s ease-in-out; /* Transición suave del borde */
             background-color: #334155;
             color: #f8fafc;
         }
-
         .search-input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6; /* Borde azul al enfocar */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Sombra azul al enfocar */
         }
-        .search-icon{
+        .search-icon {
             width: 24px;
             height: 24px;
             cursor: pointer;
             opacity: 0.7;
+            margin-left: 0.5rem;
+             background-image: url('resource/telegram$1.png');
+            background-size: cover;
+            background-position: center;
         }
-
         .user-list {
-            flex-grow: 1;
-            overflow-y: auto;
+            flex-grow: 1; /* El contenido principal ocupa el espacio restante */
+            overflow-y: auto; /* Scroll vertical si es necesario */
             padding: 0.5rem;
         }
-
         .user-item {
             display: flex;
             align-items: center;
             padding: 0.75rem;
-            border-bottom: 1px solid #4b5563;
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
+            border-bottom: 1px solid #4b5563; /* Separador entre usuarios */
+            cursor: pointer; /* Cursor de puntero al pasar el mouse */
+            transition: background-color 0.2s ease-in-out; /* Transición suave del fondo */
             border-radius: 0.5rem;
             margin-bottom: 0.25rem;
         }
-
         .user-item:hover {
             background-color: #334155;
         }
-
         .user-avatar {
-            width: 2.5rem;
+            width: 2.5rem; /* Tamaño del avatar */
             height: 2.5rem;
-            border-radius: 50%;
-            margin-right: 1rem;
-            background-color: #9ca3af;
+            border-radius: 50%; /* Hace que el avatar sea un círculo */
+            margin-right: 1rem; /* Espacio entre el avatar y el nombre */
+            background-color: #9ca3af; /* Color de fondo gris para el avatar */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -107,14 +98,12 @@
             background-size: cover;
             background-position: center;
         }
-
         .chat-window {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             border-left: 1px solid #4b5563;
         }
-
         .chat-header {
             background-color: #1e293b;
             padding: 0.75rem;
@@ -125,7 +114,6 @@
             border-radius: 0.5rem 0.5rem 0 0;
             color: #fff;
         }
-
         .message-list {
             flex-grow: 1;
             overflow-y: auto;
@@ -147,7 +135,7 @@
 
         }
 
-        .message-item.other {
+         .message-item.other {
             background-color: #f0f4f8;
             margin-left: 0;
             margin-right: auto;
@@ -240,7 +228,7 @@
 
     </style>
 </head>
-<body class="bg-gray-900">
+<body class="bg-gray-100">
     <div class="chat-container">
         <div class="sidebar">
             <div class="sidebar-header">
