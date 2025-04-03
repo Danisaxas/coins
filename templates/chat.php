@@ -13,7 +13,7 @@
         /* Estilos personalizados para la interfaz de chat */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Fondo gris claro */
+            background-color: #f8fafc; /* Fondo gris claro */
         }
         .chat-container {
             display: flex;
@@ -55,7 +55,7 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Sombra azul al enfocar */
         }
         .search-icon {
-           /* Icono de lupa SVG */
+            /* Icono de lupa SVG */
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-search'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
             background-size: cover;
             background-position: center;
@@ -84,18 +84,18 @@
             background-color: #334155;
         }
         .user-avatar {
-            width: 2.5rem; /* Tamaño del avatar */
+             width: 2.5rem;
             height: 2.5rem;
-            border-radius: 50%; /* Hace que el avatar sea un círculo */
-            margin-right: 1rem; /* Espacio entre el avatar y el nombre */
-            background-color: #9ca3af; /* Color de fondo gris para el avatar */
+            border-radius: 50%;
+            margin-right: 1rem;
+            background-color: #9ca3af;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-size: 1rem;
             font-weight: 600;
-             background-image: url('resource/telegram$1.png');
+            background-image: url('resource/telegram$1.png');
             background-size: cover;
             background-position: center;
         }
@@ -237,7 +237,7 @@
             </div>
             <div class="search-container">
                 <input type="text" id="user-search" placeholder="Buscar usuario..." class="search-input">
-                 <img src="resource/telegram$1.png" alt="Telegram" class="search-icon">
+                 <div class="search-icon"></div>
             </div>
             <div id="user-list" class="user-list">
                 </div>
