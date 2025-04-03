@@ -244,7 +244,7 @@
                     <div class="user-avatar"><?php echo substr($_SESSION['username'], 0, 2); ?></div>
                     <span><?php echo $_SESSION['username']; ?> (Tú)</span>
                 </div>
-                </div>
+            </div>
         </div>
         <div id="chat-window" class="chat-window hidden">
             <div class="chat-header">
